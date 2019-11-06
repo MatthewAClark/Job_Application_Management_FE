@@ -3,6 +3,7 @@ import api_url from "./apiConfig";
 
 class AddApplication extends React.Component {
         state = {
+                organisation_id: null,
                 advert_ref: "",
                 contract_type: "",
                 full_time : true,
@@ -16,7 +17,18 @@ class AddApplication extends React.Component {
                 job_description: "",
                 job_location: "",
                 job_field: "",
-                agency: false
+                agency: false,
+                organisations: []
+        }
+
+        componentDidMount() {
+                fetch(`${api_url}/api/organisation/names`)
+                .then(res => {
+                        return res.json();
+                })
+                .then(body => {
+                        this.setState({organisations: body});
+                })
         }
 
         handleJob_titleChange = (event) => {
@@ -155,13 +167,41 @@ class AddApplication extends React.Component {
                 
         }
 
+        handleOrganisation_idChange = (event) => {
+
+                console.log(event.target.value)
+                // this.setState({              
+                //         advert_url: event.target.value
+                // })
+                
+        }
 
         render() {
 
+        const items = [];
+
         
+        if(this.state.organisations.length > 0) {
+                this.state.organisations.forEach(organisation => {
+                        
+                        items.push(<option onChange={this.handleOrganisation_idChange} value={organisation.organisation_id}>{organisation.organisation_name}</option>);
+                })
+              
+                
+        }
+       
+
         return (<form>
                 <label>Job Title</label>
            <input className="text" onChange={this.handleJob_titleChange} type="text"  value={this.state.job_title} name="Job Title" size="40"  />
+
+<label>Organisation</label>
+           <select name="organisations">
+
+              {items}
+
+              
+                </select>
 
            <label>Advert Reference</label>
            <input type="text" onChange={this.handleAdvert_refChange} name="Application Reference" />
@@ -206,6 +246,8 @@ class AddApplication extends React.Component {
 
            <label>Advert Description</label>
            <textarea className="textarea" name="job_description" onChange={this.handleJob_descriptionChange} value={this.state.job_description} cols="50" rows="20"></textarea>
+
+                   
 
            <button className="bnt btn-default" type="submit" onClick={this.newApplication}>Add</button>
         </form>
