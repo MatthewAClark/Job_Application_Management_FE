@@ -3,281 +3,340 @@ import api_url from "./apiConfig";
 
 class AddApplication extends React.Component {
         state = {
-                organisation_id: null,
-                advert_ref: "",
-                contract_type: "",
-                full_time : true,
+                address_id: null,
+                contact_id: null,
+                job_title: '',
+                job_location: '',
+                occupation_sector: '',
+                advert_ref: '',
+                contract_type: '',
+                full_time: true,
                 date_posted: null,
-                date_seen: null,
+                date_applied: null,
                 closing_date: null,
-                advert_url: "",
-                min_salary: "",
-                max_salary: "",
-                job_title: "",
-                job_description: "",
-                job_location: "",
-                job_field: "",
+                advert_url: '',
+                min_salary: '',
+                max_salary: '',
+                advert_description: '',
                 agency: false,
-                organisations: []
+                job_board: '',
+                paid: true,
+                companies: [],
+                locations: []
         }
 
         componentDidMount() {
-                fetch(`${api_url}/api/organisation/names`)
-                .then(res => {
-                        return res.json();
-                })
-                .then(body => {
-                        this.setState({organisations: body});
-                })
+
+                // Fetch all the companies and their locations and put them on the state
+
+                fetch(`${api_url}/api/locationsandcompanies`)
+                        .then(res => {
+                                return res.json();
+                        })
+                        .then(body => {
+
+                                this.setState({
+                                        companies: body
+                                })
+
+
+                        })
         }
 
         handleJob_titleChange = (event) => {
-               
+console.log('here')
                 this.setState({
-                        
+
                         job_title: event.target.value
                 })
         }
 
         handleAdvert_refChange = (event) => {
-               
+
                 this.setState({
-                        
+
                         advert_ref: event.target.value
                 })
         }
 
         handleContract_typeChange = (event) => {
-               
+
                 this.setState({
-                        
+
                         contract_type: event.target.value
                 })
         }
 
         handleFull_timeChange = (event) => {
-              
-               if(event.target.value === "Part Time") {
-                     
-                this.setState({
-                        full_time: false
-                })
-               }
-               else {
-                
-                this.setState({
-                        full_time: true
-                })
 
-               }
-                    
-               
-               
+                if (event.target.value === "Part Time") {
+
+                        this.setState({
+                                full_time: false
+                        })
+                }
+                else {
+
+                        this.setState({
+                                full_time: true
+                        })
+
+                }
+
+
+
         }
 
         handleDate_postedChange = (event) => {
-               
+
                 this.setState({
-                        
+
                         date_posted: event.target.value
                 })
         }
 
         handleDate_appliedChange = (event) => {
-               
+
                 this.setState({
-                        
+
                         date_applied: event.target.value
                 })
         }
 
         handleClosing_dateChange = (event) => {
-               
+
                 this.setState({
-                        
+
                         closing_date: event.target.value
                 })
         }
 
-        handleDate_seenChange = (event) => {
-               
-                this.setState({
-                        
-                        date_seen: event.target.value
-                })
-        }
 
         handleAdvert_urlChange = (event) => {
-               
+
                 this.setState({
-                        
+
                         advert_url: event.target.value
                 })
         }
 
         handleMin_salaryChange = (event) => {
-               
+
                 this.setState({
-                        
+
                         min_salary: event.target.value
                 })
         }
         handleMax_salaryChange = (event) => {
-               
+
                 this.setState({
-                        
+
                         max_salary: event.target.value
                 })
         }
-        handleJob_descriptionChange = (event) => {
-               
+        handleAdvert_descriptionChange = (event) => {
+
                 this.setState({
-                        
-                        job_description: event.target.value
+
+                        advert_description: event.target.value
                 })
         }
         handleJob_locationChange = (event) => {
-               
+
+                console.log('here')
+
                 this.setState({
-                        
+
                         job_location: event.target.value
+
                 })
         }
-        handleJob_fieldChange = (event) => {
-               
+        handleOccupational_sectorChange = (event) => {
+
                 this.setState({
-                        
+
                         job_field: event.target.value
                 })
         }
 
         handleAgencyChange = () => {
 
-                this.setState({              
+                this.setState({
                         agency: !this.state.agency
                 })
-                
+
         }
 
         handleAdvert_urlChange = (event) => {
 
-                this.setState({              
+                this.setState({
                         advert_url: event.target.value
                 })
-                
+
         }
 
-        handleOrganisation_idChange = (event) => {
+        handleCompanyName_idChange = (event) => {
 
-                console.log(event.target.value)
-                // this.setState({              
-                //         advert_url: event.target.value
-                // })
-                
+                // update locations list with only companies in that location
+
+
+                let companyLocations = this.state.companies.filter(company => company.company_id == event.target.value)
+                console.log(companyLocations)
+                this.setState({
+                        locations: companyLocations,
+                        address_id: companyLocations[0].address_id
+                })
+
         }
+
+        handleCompanyLocation_idChange = (event) => {
+
+                // update locations list with only companies in that location
+
+
+console.log('companylocationthingy')
+
+                this.setState({
+                        address_id: event.target.value
+
+                })
+
+
+        }
+
+
+
 
         render() {
 
-        const items = [];
+                // Get the list of company names for the company name fields
+                const companyNames = [];
+                const companyLocations = [];
+                if (this.state.companies.length > 0) {
+                        companyNames.push(<option value={null}>Please select</option>);
+                        this.state.companies.forEach(company => {
+                                companyNames.push(<option value={company.company_id}>{company.company_name}</option>);
 
-        
-        if(this.state.organisations.length > 0) {
-                this.state.organisations.forEach(organisation => {
-                        
-                        items.push(<option onChange={this.handleOrganisation_idChange} value={organisation.organisation_id}>{organisation.organisation_name}</option>);
-                })
-              
-                
+                        })
+
+                        this.state.locations.forEach(location => {
+                                companyLocations.push(<option value={location.address_id}>{location.town_city}</option>);
+
+                        })
+
+
+                }
+
+
+                return (<form>
+                        <label>Job Title</label>
+                        <input className="text" onChange={this.handleJob_titleChange} type="text" value={this.state.job_title} name="Job Title" size="40" />
+
+                        <label>Company Name</label>
+                        <select name="companyName" onChange={this.handleCompanyName_idChange}>
+
+                                {companyNames}
+
+
+                        </select>
+
+
+
+                        <label>Company Location</label>
+                        <select name="companyLocation" onChange={this.handleCompanyLocation_idChange}>
+
+                                {companyLocations}
+
+
+                        </select>
+
+
+
+
+                        <label>Advert Reference</label>
+                        <input type="text" onChange={this.handleAdvert_refChange} name="Application Reference" />
+
+                        <label>Occupation Sector</label>
+                        <input type="text" onChange={this.handleOccupational_sectorChange} name="Occupation Sector" />
+
+                        <label>Advert URL</label>
+                        <input type="text" onChange={this.handleAdvert_urlChange} name="Advert URL" />
+
+                        <label>Agency?</label>
+
+                        <input type="checkbox" name="agency" value={this.state.agency} onClick={this.handleAgencyChange} />
+
+                        <label>Contract Type</label>
+                        <input type="text" onChange={this.handleContract_typeChange} name="Contract Type" />
+
+                        <br />
+
+                        <input onChange={this.handleFull_timeChange} type="radio" name="hours" value="Full Time" /> Full Time<br></br>
+                        <input onChange={this.handleFull_timeChange} type="radio" name="hours" value="Part Time" /> Part Time<br></br>
+
+                        <label>Job Location</label>
+                        <input type="text" onChange={this.handleJob_locationChange} name="Job Location" />
+
+
+
+                        <label>Minimum Salary</label>
+                        <input type="text" onChange={this.handleMin_salaryChange} name="Min Sal" />
+
+                        <label>Maximum Salary</label>
+                        <input type="text" onChange={this.handleMax_salaryChange} name="Max Sal" />
+
+                        <label>Date Posted</label>
+                        <input type="date" onChange={this.handleDate_postedChange} name="Date Posted" />
+
+                        {/* <label>Date Seen</label>
+           <input type="date" onChange={this.handleDate_seenChange} name="Date Seen" /> */}
+
+                        <label>Closing Date</label>
+                        <input type="date" onChange={this.handleClosing_dateChange} name="Closing Date" />
+
+                        <br />
+
+                        <label>Advert Description</label>
+                        <textarea className="textarea" name="advert_description" onChange={this.handleAdvert_descriptionChange} value={this.state.advert_description} cols="50" rows="20"></textarea>
+
+
+
+                        <button className="bnt btn-default" type="submit" onClick={this.newApplication}>Add</button>
+                </form>
+                );
         }
-       
 
-        return (<form>
-                <label>Job Title</label>
-           <input className="text" onChange={this.handleJob_titleChange} type="text"  value={this.state.job_title} name="Job Title" size="40"  />
-
-<label>Organisation</label>
-           <select name="organisations">
-
-              {items}
-
-              
-                </select>
-
-           <label>Advert Reference</label>
-           <input type="text" onChange={this.handleAdvert_refChange} name="Application Reference" />
-
-           <label>Job Field</label>
-           <input type="text" onChange={this.handleJob_fieldChange} name="Job Field" />
-
-           <label>Advert URL</label>
-           <input type="text" onChange={this.handleAdvert_urlChange} name="Advert URL" />
-
-           <label>Agency?</label>
-           {/* <input type="radio" name="agency" value="yes" onClick={this.handleAgencyChange}/> */}
-           <input type="checkbox" name="agency" value={this.state.agency} onClick={this.handleAgencyChange}/>
-
-           <label>Contract Type</label>
-           <input type="text" onChange={this.handleContract_typeChange} name="Contract Type" />
-
-           <br/>
-
-           <input onChange={this.handleFull_timeChange} type="radio" name="hours" value="Full Time"/> Full Time<br></br>
-                <input onChange={this.handleFull_timeChange} type="radio" name="hours" value="Part Time"/> Part Time<br></br>
-
-           <label>Location</label>
-           <input type="text" onChange={this.handleJob_locationChange} name="Location" />
-
-           <label>Minimum Salary</label>
-           <input type="text" onChange={this.handleMin_salaryChange} name="Min Sal" />
-
-           <label>Maximum Salary</label>
-           <input type="text" onChange={this.handleMax_salaryChange} name="Max Sal" />
-
-           <label>Date Posted</label>
-           <input type="date" onChange={this.handleDate_postedChange} name="Date Posted" />
-
-           <label>Date Seen</label>
-           <input type="date" onChange={this.handleDate_seenChange} name="Date Seen" />
-
-           <label>Closing Date</label>
-           <input type="date" onChange={this.handleClosing_dateChange} name="Closing Date" />
-
-           <br/>
-
-           <label>Advert Description</label>
-           <textarea className="textarea" name="job_description" onChange={this.handleJob_descriptionChange} value={this.state.job_description} cols="50" rows="20"></textarea>
-
-                   
-
-           <button className="bnt btn-default" type="submit" onClick={this.newApplication}>Add</button>
-        </form>
-        );
-        }
-    
         newApplication = (event) => {
 
                 // Comment out for development purposes only
-                 event.preventDefault();
+                event.preventDefault();
 
-                fetch(`${api_url}/api/application`, {
+                console.log(this.state)
+                fetch(`${api_url}/api/adverts`, {
                         headers: new Headers({ "Content-Type": "application/json" }),
                         method: 'POST',
                         body: JSON.stringify({
-                                 advert_ref: this.state.advert_ref,
-                                 contract_type: this.state.contract_type,
-                                 full_time: this.state.full_time,
-                                 date_posted: this.state.date_posted,
-                                 date_seen: this.state.date_seen,
-                                 closing_date: this.state.closing_date,
-                                 live: true,
-                                 advert_url: this.state.advert_url,
-                                 min_salary: this.state.min_salary,
-                                 max_salary: this.state.max_salary,
-                                 job_title: this.state.job_title,
-                                 job_description: this.state.job_description,
-                                 job_location: this.state.job_location,
-                                 job_field: this.state.job_field,
-                                 agency: this.state.agency
+
+                                address_id: this.state.address_id,
+                                contact_id: this.state.contact_id,
+                                job_title: this.state.job_title,
+                                occupation_sector: this.state.occupation_sector,
+                                advert_ref: this.state.advert_ref,
+                                contract_type: this.state.contract_type,
+                                full_time: this.state.full_time,
+                                date_posted: this.state.date_posted,
+                                date_applied: this.state.date_applied,
+                                closing_date: this.state.closing_date,
+                                advert_url: this.state.advert_url,
+                                min_salary: this.state.min_salary,
+                                max_salary: this.state.max_salary,
+                                advert_description: this.state.advert_description,
+                                agency: this.state.agency,
+                                job_board: this.state.job_board,
+                                job_location: this.state.job_location,
+                                paid: this.state.paid
+
+
                         })
                 })
                         .then(res => res.json())

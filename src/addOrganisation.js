@@ -146,14 +146,14 @@ class AddOrganisation extends React.Component {
             headers: new Headers({ "Content-Type": "application/json" }),
             method: 'POST',
             body: JSON.stringify({
-                organisation_name: this.state.organisation_name,
+                company_name: this.state.company_name,
                 address1: this.state.address1,
                 address2: this.state.address2,
                 address3: this.state.address3,
                 address4: this.state.address4,
                 postcode: this.state.postcode,
                 email: this.state.email,
-                organisation_url: this.state.organisation_url,
+                company_url: this.state.company_url,
                 contact_number: this.state.contact_number,
                 fax_number: this.state.fax_number
             })
