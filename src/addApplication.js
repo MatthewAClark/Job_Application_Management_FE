@@ -21,6 +21,7 @@ class AddApplication extends React.Component {
                 agency: false,
                 job_board: '',
                 paid: true,
+                company_locations: [],
                 companies: [],
                 locations: []
         }
@@ -34,19 +35,36 @@ class AddApplication extends React.Component {
                                 return res.json();
                         })
                         .then(body => {
+                               
+                                
 
-                                this.setState({
-                                        companies: body
-                                })
-
-
+                                
+                 
+                              this.setState({
+                                     companies: this.getUnique(body, 'company_id'),
+                                     company_locations: body
+                              
                         })
+                })
         }
 
-        handleJob_titleChange = (event) => {
-console.log('here')
-                this.setState({
+        // Taken from the web, will be rewritten later in my own code - remove duplicate companies
+        getUnique(arr, comp) {
 
+                const unique = arr
+                     .map(e => e[comp])
+              
+                   // store the keys of the unique objects
+                  .map((e, i, final) => final.indexOf(e) === i && i)
+              
+                  // eliminate the dead keys & store unique objects
+                  .filter(e => arr[e]).map(e => arr[e]);
+              
+                 return unique;
+              }
+
+        handleJob_titleChange = (event) => {
+                this.setState({
                         job_title: event.target.value
                 })
         }
@@ -178,14 +196,17 @@ console.log('here')
         handleCompanyName_idChange = (event) => {
 
                 // update locations list with only companies in that location
+              
+                let locations = this.state.company_locations.filter(company => company.company_id == event.target.value)
+                console.log(locations)
 
-
-                let companyLocations = this.state.companies.filter(company => company.company_id == event.target.value)
-                console.log(companyLocations)
                 this.setState({
-                        locations: companyLocations,
-                        address_id: companyLocations[0].address_id
+                        company_id: event.target.value,
+                        address_id: this.state.company_locations[0].address_id,
+                        locations: locations
                 })
+
+        
 
         }
 
@@ -194,10 +215,10 @@ console.log('here')
                 // update locations list with only companies in that location
 
 
-console.log('companylocationthingy')
+                console.log('companylocationthingy')
 
                 this.setState({
-                        address_id: event.target.value
+                        address_id: parseInt(event.target.value, 10)
 
                 })
 
