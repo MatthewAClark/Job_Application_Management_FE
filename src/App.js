@@ -5,6 +5,7 @@ import 'bulma/css/bulma.css';
 import AddApplication from './addApplication';
 import AddCompany from './addCompany';
 import AddAddress from './addAddress';
+import AddContact from './addContact';
 
 
 
@@ -33,6 +34,7 @@ class App extends Component {
                   <Link className="navbar-item bg-dark text-white" to="/addApplication">Add Application</Link>
                   <Link className="navbar-item bg-dark text-white" to="/addCompany">Add Company</Link>
                   <Link className="navbar-item bg-dark text-white" to="/addAddress">Add Address</Link>
+                  <Link className="navbar-item bg-dark text-white" to="/addContact">Add Contact</Link>
                   
                     </div>
                   
@@ -51,6 +53,8 @@ class App extends Component {
 <Route exact path="/addAddress" render={(props) => (
              <AddAddress {...props} />)} />
 
+<Route exact path="/addContact" render={(props) => (
+             <AddContact {...props} />)} />
          
 
 <footer className="bg-dark"></footer>
