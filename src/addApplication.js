@@ -3,6 +3,7 @@ import api_url from "./apiConfig";
 
 class AddApplication extends React.Component {
         state = {
+                company_id: null,
                 address_id: null,
                 contact_id: null,
                 job_title: '',
@@ -21,47 +22,28 @@ class AddApplication extends React.Component {
                 agency: false,
                 job_board: '',
                 paid: true,
-                company_locations: [],
                 companies: [],
-                locations: []
+                addresses: [],
+                contacts: []
         }
 
         componentDidMount() {
 
-                // Fetch all the companies and their locations and put them on the state
-
-                fetch(`${api_url}/api/locationsandcompanies`)
+                // Fetch all the companies and put them on the state
+                fetch(`${api_url}/api/companies/names`)
                         .then(res => {
                                 return res.json();
                         })
                         .then(body => {
-                               
-                                
 
-                                
-                 
-                              this.setState({
-                                     companies: this.getUnique(body, 'company_id'),
-                                     company_locations: body
-                              
+
+                                this.setState({
+                                        companies: body
+
+                                })
                         })
-                })
         }
 
-        // Taken from the web, will be rewritten later in my own code - remove duplicate companies
-        getUnique(arr, comp) {
-
-                const unique = arr
-                     .map(e => e[comp])
-              
-                   // store the keys of the unique objects
-                  .map((e, i, final) => final.indexOf(e) === i && i)
-              
-                  // eliminate the dead keys & store unique objects
-                  .filter(e => arr[e]).map(e => arr[e]);
-              
-                 return unique;
-              }
 
         handleJob_titleChange = (event) => {
                 this.setState({
@@ -195,58 +177,95 @@ class AddApplication extends React.Component {
 
         handleCompanyName_idChange = (event) => {
 
-                // update locations list with only companies in that location
+                // update company_id with selection
+                this.setState({                        
+                        company_id: event.target.value
+                })
               
-                let locations = this.state.company_locations.filter(company => company.company_id == event.target.value)
-                console.log(locations)
+                // Fetch all the addresses associated with that company
+                fetch(`${api_url}/api/addresses/${event.target.value}`)
+                        .then(res => {
+                                return res.json();
+                        })
+            
+                        .then(body => {
 
-                this.setState({
-                        company_id: event.target.value,
-                        address_id: this.state.company_locations[0].address_id,
-                        locations: locations
-                })
+                                this.setState({
+                                        addresses: body,
+                                        address_id: null,
+                                        contact_id: null
+                                })
+                              
+                        })
 
-        
-
-        }
-
-        handleCompanyLocation_idChange = (event) => {
-
-                // update locations list with only companies in that location
-
-
-                console.log('companylocationthingy')
-
-                this.setState({
-                        address_id: parseInt(event.target.value, 10)
-
-                })
 
 
         }
 
+       
+        handleAddress_idChange = (event) => {
+                console.log(event.target.value)
+                fetch(`${api_url}/api/contacts/${event.target.value}`)
+                        .then(res => {
+                                return res.json();
+                        })
+                        .then(body => {
+                                console.log(body)
+                                this.setState({
+                                        contacts: body
+
+                                })
+                        })
+
+                this.setState({
+                        address_id: event.target.value
+
+                })
+
+
+        }
+
+        handleContact_nameChange = (event) => {
+                
+
+                this.setState({
+                        contact_id: event.target.value
+
+                })
+
+
+        }
 
 
 
         render() {
 
                 // Get the list of company names for the company name fields
-                const companyNames = [];
-                const companyLocations = [];
-                if (this.state.companies.length > 0) {
-                        companyNames.push(<option value={null}>Please select</option>);
-                        this.state.companies.forEach(company => {
-                                companyNames.push(<option value={company.company_id}>{company.company_name}</option>);
+                const companies = [];
+                const addresses = [];
+                const contacts = [];
 
-                        })
+                // if (this.state.companies.length > 0) {
+                        
+               companies.push(<option value="" selected disabled hidden>Please select</option>);
+                this.state.companies.forEach(company => {
+                        companies.push(<option value={company.company_id}>{company.company_name}</option>);
 
-                        this.state.locations.forEach(location => {
-                                companyLocations.push(<option value={location.address_id}>{location.town_city}</option>);
+                })
+                addresses.push(<option value="" selected disabled hidden>Please select</option>);
+                this.state.addresses.forEach(address => {
+                        addresses.push(<option value={address.address_id}>{address.town_city}</option>);
 
-                        })
+                })
+                contacts.push(<option value="" selected disabled hidden>Please select</option>);
+                
+                this.state.contacts.forEach(contact => {
+                        contacts.push(<option value={contact.contact_id}>{contact.contact_name}</option>);
+
+                })
 
 
-                }
+                // }
 
 
                 return (<form>
@@ -256,7 +275,7 @@ class AddApplication extends React.Component {
                         <label>Company Name</label>
                         <select name="companyName" onChange={this.handleCompanyName_idChange}>
 
-                                {companyNames}
+                                {companies}
 
 
                         </select>
@@ -264,13 +283,17 @@ class AddApplication extends React.Component {
 
 
                         <label>Company Location</label>
-                        <select name="companyLocation" onChange={this.handleCompanyLocation_idChange}>
+                        <select name="addresses" onChange={this.handleAddress_idChange}>
 
-                                {companyLocations}
+                                {addresses}
 
 
                         </select>
 
+                        <label>Contact name</label>
+                        <select name="contact" onChange={this.handleContact_nameChange}>
+                                {contacts}
+                        </select>
 
 
 
