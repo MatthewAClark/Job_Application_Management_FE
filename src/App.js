@@ -6,6 +6,7 @@ import AddApplication from './addApplication';
 import AddCompany from './addCompany';
 import AddAddress from './addAddress';
 import AddContact from './addContact';
+import AddContract from './addContract';
 
 
 
@@ -35,6 +36,7 @@ class App extends Component {
                   <Link className="navbar-item bg-dark text-white" to="/addCompany">Add Company</Link>
                   <Link className="navbar-item bg-dark text-white" to="/addAddress">Add Address</Link>
                   <Link className="navbar-item bg-dark text-white" to="/addContact">Add Contact</Link>
+                  <Link className="navbar-item bg-dark text-white" to="/addContract">Add Contract</Link>
                   
                     </div>
                   
@@ -55,6 +57,9 @@ class App extends Component {
 
 <Route exact path="/addContact" render={(props) => (
              <AddContact {...props} />)} />
+
+<Route exact path="/addContract" render={(props) => (
+             <AddContract {...props} />)} />
          
 
 <footer className="bg-dark"></footer>
