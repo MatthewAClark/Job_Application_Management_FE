@@ -30,7 +30,7 @@ class AddApplication extends React.Component {
         componentDidMount() {
 
                 // Fetch all the companies and put them on the state
-                fetch(`${api_url}/api/companies/names`)
+                fetch(`${api_url}/api/companies/list`)
                         .then(res => {
                                 return res.json();
                         })
@@ -183,7 +183,7 @@ class AddApplication extends React.Component {
                 })
               
                 // Fetch all the addresses associated with that company
-                fetch(`${api_url}/api/addresses/${event.target.value}`)
+                fetch(`${api_url}/api/companies/addresses/${event.target.value}`)
                         .then(res => {
                                 return res.json();
                         })
@@ -205,7 +205,7 @@ class AddApplication extends React.Component {
        
         handleAddress_idChange = (event) => {
                 console.log(event.target.value)
-                fetch(`${api_url}/api/contacts/${event.target.value}`)
+                fetch(`${api_url}/api/addresses/contacts/${event.target.value}`)
                         .then(res => {
                                 return res.json();
                         })

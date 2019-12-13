@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Link } from "react-router-dom";
 import 'bulma/css/bulma.css';
 
-import AddApplication from './addApplication';
+import AddAdvert from './addAdvert';
 import AddCompany from './addCompany';
 import AddAddress from './addAddress';
 import AddContact from './addContact';
 import AddContract from './addContract';
+import Applications from './Applications';
 
 
 
@@ -32,11 +33,12 @@ class App extends Component {
                   
                   <nav className="navbar bg-dark">
                   <div className="container">
-                  <Link className="navbar-item bg-dark text-white" to="/addApplication">Add Application</Link>
-                  <Link className="navbar-item bg-dark text-white" to="/addCompany">Add Company</Link>
+                  <Link className="navbar-item bg-dark text-white" to="/Applications">Application Management</Link>
+                  <Link className="navbar-item bg-dark text-white" to="/AddAdvert">Add Job Advert</Link>
+                  {/* <Link className="navbar-item bg-dark text-white" to="/addCompany">Add Company</Link>
                   <Link className="navbar-item bg-dark text-white" to="/addAddress">Add Address</Link>
                   <Link className="navbar-item bg-dark text-white" to="/addContact">Add Contact</Link>
-                  <Link className="navbar-item bg-dark text-white" to="/addContract">Add Contract</Link>
+                  <Link className="navbar-item bg-dark text-white" to="/addContract">Add Contract</Link> */}
                   
                     </div>
                   
@@ -46,10 +48,13 @@ class App extends Component {
            
           </header>
 
-          <Route exact path="/addApplication" render={(props) => (
-            <AddApplication {...props} />)} />
+          <Route exact path="/Applications" render={(props) => (
+            <Applications {...props} />)} />
 
-<Route exact path="/addCompany" render={(props) => (
+<Route exact path="/AddAdvert" render={(props) => (
+            <AddAdvert {...props} />)} />
+
+{/* <Route exact path="/addCompany" render={(props) => (
              <AddCompany {...props} />)} />
 
 <Route exact path="/addAddress" render={(props) => (
@@ -59,7 +64,7 @@ class App extends Component {
              <AddContact {...props} />)} />
 
 <Route exact path="/addContract" render={(props) => (
-             <AddContract {...props} />)} />
+             <AddContract {...props} />)} /> */}
          
 
 <footer className="bg-dark"></footer>

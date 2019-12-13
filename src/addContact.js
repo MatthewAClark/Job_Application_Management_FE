@@ -98,7 +98,7 @@ class AddContact extends React.Component {
 
         handleReferenceChange = (event) => {
                 this.setState({
-                        reference: event.target.value
+                        reference: !this.state.reference
                 })
         }
 
@@ -187,7 +187,7 @@ class AddContact extends React.Component {
 
 
                         <label>Reference </label>
-                        <input type="checkbox" name="agency" value={this.state.agency} onClick={this.handleAgencyChange} />
+                        <input type="checkbox" name="reference" value={this.state.reference} onClick={this.handleReferenceChange} />
 
                         <label>Date known</label>
                         <input type="date" onChange={this.handleDate_knownChange} name="date known" />

@@ -17,7 +17,7 @@ class AddAddress extends React.Component {
 
                 // Fetch all the companies and their locations and put them on the state
 
-                fetch(`${api_url}/api/companies/names`)
+                fetch(`${api_url}/api/companies/list`)
                         .then(res => {
                                 return res.json();
                         })
@@ -152,7 +152,7 @@ class AddAddress extends React.Component {
                 event.preventDefault();
                 console.log(this.state.postcode_zipcode)
                
-                fetch(`${api_url}/api/addresses`, {
+                fetch(`${api_url}/api/companies/address`, {
                         headers: new Headers({ "Content-Type": "application/json" }),
                         method: 'POST',
                         body: JSON.stringify({
