@@ -197,7 +197,7 @@ class AddAdvert extends React.Component {
                 // Comment out for development purposes only
                 event.preventDefault();
 
-                console.log(this.state)
+              
                 fetch(`${api_url}/api/adverts`, {
                         headers: new Headers({ "Content-Type": "application/json" }),
                         method: 'POST',
