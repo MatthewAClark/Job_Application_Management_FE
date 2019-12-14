@@ -2,44 +2,21 @@ import React from 'react'
 import api_url from "./apiConfig";
 
 class Applications extends React.Component {
-        state = {
-              adverts: []
-        }
-
-        componentDidMount() {
-
-                // Fetch all the live adverts and put them on the state
-                fetch(`${api_url}/api/adverts/live`)
-                        .then(res => {
-                                return res.json();
-                        })
-                        .then(body => {
-
-                                console.log(body)
-                                this.setState({
-                                        adverts: body
-
-                                })
-                        })
-        }
-
-
-     
-
+      
 
         render() {
 
                 // 
                 const tableData = [];
-
-                this.state.adverts.forEach(advert => {
+                this.props.adverts.forEach(advert => {
                         tableData.push(<tr><td>{advert.job_title}</td><td>{advert.company_name}</td><td>{advert.advert_description.slice(0,200)}...</td><td>{advert.job_location}</td><td>{advert.min_salary} - {advert.max_salary}</td><td><button>Info</button></td></tr>);
                 })
                         
           
 
                 return (
-                        <table className='table'>
+                        <div>
+  <table className='table'>
                                 <tbody>
                                         <tr><th>Job Title</th><th>Company</th><th>Description</th><th>Location</th><th>Salary</th><th></th></tr>
                                 {tableData}
@@ -47,7 +24,10 @@ class Applications extends React.Component {
                         </table>
 
 
-                        // <button className="bnt btn-default" type="submit" onClick={this.newApplication}>Add</button>
+                        
+                        <a className="btn btn-primary btn-lg" href="/addadvert" role="button">Add Application</a>
+                        </div>
+                      
                 
                 );
         }
