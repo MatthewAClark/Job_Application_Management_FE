@@ -18,7 +18,8 @@ class Advert extends React.Component {
                 agency: false,
                 job_board: '',
                 voluntary: false,
-                job_location: ''
+                job_location: '',
+                live: true
         }
 
         componentDidMount() {
@@ -233,8 +234,8 @@ class Advert extends React.Component {
                                 agency: this.state.agency,
                                 job_board: this.state.job_board,
                                 voluntary: this.state.voluntary,
-                                job_location: this.state.job_location
-
+                                job_location: this.state.job_location,
+                                live: this.state.live
 
                         })
                 })

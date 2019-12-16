@@ -2,68 +2,61 @@ import React from 'react'
 import api_url from "./apiConfig";
 
 class AddCompany extends React.Component {
-        state = {
-                company_name: '',
-                sector: '' ,
-                industry: '',
-                company_url: ''
-        }
+        // state = {
+        //         company_name: '',
+        //         website: '',
+        //         company_id: null,
+        // }
 
        
 
-     
+
         handleCompany_nameChange = (event) => {
-                this.setState({
-                        company_name: event.target.value
+
+                // Check the list to see if we already have that company
+
+                var postCompany = {};
+                const i = this.props.getCompanies.findIndex(company => {
+                        return company.company_name === event.target.value
                 })
+
+                if (i > -1) postCompany = this.props.getCompanies[i]; else postCompany.company_name = event.target.value
+                this.props.updatePostCompany(postCompany)
+
         }
 
-        handleSectorChange = (event) => {
+        // handleWebsiteChange = (event) => {
 
-                this.setState({
+        //         this.setState({
 
-                        sector: event.target.value
-                })
-        }
+        //                 website: event.target.value
+        //         })
+        // }
 
-        handleIndustryChange = (event) => {
-
-                this.setState({
-
-                        industry: event.target.value
-                })
-        }
-
-        handleCompany_urlChange = (event) => {
-
-               
-
-                        this.setState({
-                                company_url: event.target.value
-                        })
-          
-        }
-
-        
-       
 
 
         render() {
 
-                
-              
+                const companies = []
+
+                this.props.getCompanies.forEach(company => companies.push(<option value={company.company_name} />))
 
 
                 return (<form>
                         <label>Company Name</label>
-                        <input className="text" onChange={this.handleCompany_nameChange} type="text" value={this.state.company_name} name="Company Name" size="40" />
+
+
+
+                        <input list="companies" onChange={this.handleCompany_nameChange} name="companies"></input>
+                        <datalist id="companies">
+                                {companies}
+                        </datalist>
 
 
 
 
 
-                       
-
+{/* 
 
 
                         <label>Industry</label>
@@ -73,37 +66,27 @@ class AddCompany extends React.Component {
                         <input type="text" onChange={this.handleSectorChange} name="Sector" />
 
                         <label>URL</label>
-                        <input type="text" onChange={this.handleCompany_urlChange} name="Company URL" />
+                        <input type="text" onChange={this.handleCompany_urlChange} name="Company URL" /> */}
 
 
 
-
-                        <button className="bnt btn-default" type="submit" onClick={this.newApplication}>Add</button>
+{/* 
+                        <button className="bnt btn-default" type="submit" onClick={this.addCompany}>Add</button> */}
                 </form>
                 );
         }
 
-        newApplication = (event) => {
+        // addCompany = (event) => {
 
-                // Comment out for development purposes only
-                event.preventDefault();
+        //         // Comment out for development purposes only
+        //         event.preventDefault();
 
+        //         // 
                
-                fetch(`${api_url}/api/companies`, {
-                        headers: new Headers({ "Content-Type": "application/json" }),
-                        method: 'POST',
-                        body: JSON.stringify({
 
-                                company_name: this.state.company_name,
-                                sector: this.state.sector,
-                                industry: this.state.industry,
-                                company_url: this.state.company_url
-                                
-                        })
-                })
-                        .then(res => res.json())
-                        .catch(console.log)
-        }
+        //         // Add company to db if it doesn't already exist in db
+                
+        // }
 }
 
 export default AddCompany;

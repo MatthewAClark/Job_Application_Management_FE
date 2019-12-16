@@ -9,7 +9,7 @@ class Applications extends React.Component {
                 // 
                 const tableData = [];
                 this.props.adverts.forEach(advert => {
-                        tableData.push(<tr><td>{advert.job_title}</td><td>{advert.company_name}</td><td>{advert.advert_description.slice(0,200)}...</td><td>{advert.job_location}</td><td>{advert.min_salary} - {advert.max_salary}</td><td><a className="btn btn-primary btn-sm" href={advert.advert_id} role="button">View</a></td></tr>);
+                        tableData.push(<tr><td>{advert.job_title}</td><td>{advert.company_name}</td><td>{advert.advert_description.slice(0,200)}...</td><td>{advert.job_location}</td><td>{advert.min_salary} - {advert.max_salary}</td><td>{advert.closing_date}</td><td><a className="btn btn-primary btn-sm" href={advert.advert_id} role="button">View</a></td></tr>);
                 })
                         
           
@@ -18,7 +18,7 @@ class Applications extends React.Component {
                         <div>
   <table className='table'>
                                 <tbody>
-                                        <tr><th>Job Title</th><th>Company</th><th>Description</th><th>Location</th><th>Salary</th><th></th></tr>
+                                        <tr><th>Job Title</th><th>Company</th><th>Description</th><th>Location</th><th>Salary</th><th>Closing Date</th><th></th></tr>
                                 {tableData}
                                 </tbody>
                         </table>
