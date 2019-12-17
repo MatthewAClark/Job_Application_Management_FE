@@ -5,7 +5,7 @@ import AddAddress from "./addAddress";
 
 class AddAdvert extends React.Component {
         state = {
-                postAdvert: {
+                advert: {
                         company_id: null,
                         job_title: '',
                         advert_ref: '',
@@ -22,17 +22,17 @@ class AddAdvert extends React.Component {
                         voluntary: false,
                         job_location: '',
                 },
-                postCompany: {
+                company: {
                         company_id: null,
                         company_name: ''
                 },
-                getCompanies: [],
-                postAddress: {
+                allCompanies: [],
+                address: {
                         address_id: null,
                         address_field: '',
                         postcode: ''
                 },
-                getAddresses: []
+                allAddresses: []
         }
 
         // Fetch a list of all the companies so we know not to add the same company twice
@@ -40,52 +40,108 @@ class AddAdvert extends React.Component {
                 fetch(`${api_url}/api/companies/list`)
                         .then(res => res.json())
                         .then(body => {
-                                this.setState({ getCompanies: body })
+                                this.setState({ allCompanies: body })
                         })
         }
 
 
-        handleJob_titleChange = (event) => {
-                const postAdvert = this.state.postAdvert;
-                postAdvert.job_title = event.target.value;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+
+        getAdvertState = () => this.state.advert;
+
+        setAdvertState = (advert) => {
+                var update = this.state.advert;
+                update = { ...update, ...advert  }
+                this.setState({advert: update});
         }
 
-        // handleCompany_nameChange = (event) => {
-        //         postAdvert = this.state.postAdvert;
-        //         postAdvert.job_title = event.target.value;
-        //         this.setState({
-        //                 job_title: postAdvert
-        //         })
-        // }
+        getCompanyState = () => this.state.company;
+
+        setCompanyState = (company) => {
+                var update = this.state.company;
+                update = { ...update, ...company  }
+                this.setState({company: update});
+
+                // Fetch address list of company
+                if (company.company_id != null) {
+                        fetch(`${api_url}/api/addresses/companies/${company.company_id}`)
+                                .then(res => res.json())
+                                .then(body => {
+                                        console.log(body)
+                                        this.setAllAddressesState(body)
+
+                                        // Set default values
+                                        this.setAddressState(body[0])
+                                        this.setAdvertState({address_id: body[0].address_id})
+                                })
+                }
+        }
+
+        getAddressState = () => this.state.address;
+
+        setAddressState = (address) => {
+                var update = this.state.address;
+                update = { ...update, ...address, company_id: this.getCompanyState().company_id }
+                this.setState({address: update});
+                this.setAdvertState({address_id: address.address_id})
+        }
+
+        getAllCompaniesState = () => this.state.allCompanies;
+
+        setAllCompaniesState = (allCompanies) => {
+                var update = this.state.allCompanies;
+                update = [ ...update, ...allCompanies  ]
+                this.setState({allCompanies: update});
+        }
+
+        getAllAddressesState = () => this.state.allAddresses;
+
+        setAllAddressesState = (allAddresses) => {
+                var update = this.state.allAddresses;
+                update = [ ...update, ...allAddresses  ]
+                this.setState({allAddresses: update});
+        }
+
+        // Reaction with the DOM 
+
+        handleJob_titleChange = (event) => {
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.job_title = event.target.value;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({job_title: event.target.value})
+        }
+
+
 
         handleAdvert_refChange = (event) => {
 
-                const postAdvert = this.state.postAdvert;
-                postAdvert.advert_ref = event.target.value;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.advert_ref = event.target.value;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({advert_ref: event.target.value})
         }
 
         handleContract_typeChange = (event) => {
 
-                const postAdvert = this.state.postAdvert;
-                postAdvert.contract_type = event.target.value;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.contract_type = event.target.value;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({contract_type: event.target.value})
         }
 
         handleFull_time_part_timeChange = (event) => {
 
-                const postAdvert = this.state.postAdvert;
-                postAdvert.full_time_part_time = event.target.value;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.full_time_part_time = event.target.value;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({full_time_part_time: event.target.value})
 
 
 
@@ -93,154 +149,142 @@ class AddAdvert extends React.Component {
 
         handleDate_postedChange = (event) => {
 
-                const postAdvert = this.state.postAdvert;
-                postAdvert.date_posted = event.target.value;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.date_posted = event.target.value;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({date_posted: event.target.value})
         }
 
 
         handleClosing_dateChange = (event) => {
 
-                const postAdvert = this.state.postAdvert;
-                postAdvert.closing_date = event.target.value;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.closing_date = event.target.value;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({closing_date: event.target.value})
         }
 
 
         handleWebsiteChange = (event) => {
 
-                const postAdvert = this.state.postAdvert;
-                postAdvert.website = event.target.value;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.website = event.target.value;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({website: event.target.value})
         }
 
         handleMin_salaryChange = (event) => {
 
-                const postAdvert = this.state.postAdvert;
-                postAdvert.min_salary = event.target.value;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.min_salary = event.target.value;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({min_salary: event.target.value})
         }
         handleMax_salaryChange = (event) => {
 
-                const postAdvert = this.state.postAdvert;
-                postAdvert.max_salary = event.target.value;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.max_salary = event.target.value;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({max_salary: event.target.value})
         }
         handleAdvert_descriptionChange = (event) => {
 
-                const postAdvert = this.state.postAdvert;
-                postAdvert.advert_description = event.target.value;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.advert_description = event.target.value;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({advert_description: event.target.value})
         }
-        // handleJob_locationChange = (event) => {
-
-        //         postAdvert = this.state.postAdvert;
-        //         postAdvert.job_location = event.target.value;
-        //         this.setState({
-        //                 postAdvert: postAdvert
-        //         })
-        // }
+     
 
         handleAgencyChange = () => {
 
-                const postAdvert = this.state.postAdvert;
-                postAdvert.agency = !postAdvert.agency;
-                this.setState({
-                        postAdvert: postAdvert
-                })
+                // const postAdvert = this.state.postAdvert;
+                // postAdvert.agency = !postAdvert.agency;
+                // this.setState({
+                //         postAdvert: postAdvert
+                // })
+                this.setAdvertState({agency: !this.getAdvertState().agency})
 
         }
 
 
-        // Update company details to state from addCompany component
-        updatePostCompany = (postCompany) => {
-                this.setState({
-                        postCompany: postCompany
 
-                })
+       
 
-                // And fetch all addresses for that company
-                if (postCompany.company_id != null) {
-                        fetch(`${api_url}/api/addresses/companies/${postCompany.company_id}`)
-                                .then(res => res.json())
-                                .then(body => {
-                                        console.log(body)
-                                        const getAddresses = body;
-                                        this.setState({ getAddresses: getAddresses })
-                                })
-                }
+        postCompany = (state) => new Promise(function (resolve, reject) {
+                // console.log(this.state)
 
-        }
+                if (state.company.company_id > 0) {
 
-        postAdvert = () => {
-                console.log(this.state.postCompany)
-                if (this.state.postCompany.company_id > 0) {
 
-                        const postAdvert = this.state.postAdvert;
-                        postAdvert.company_id = this.state.postCompany.company_id;
-                        this.setState({ postAdvert: postAdvert });
-                        fetch(`${api_url}/api/adverts`, {
-                                headers: new Headers({ "Content-Type": "application/json" }),
-                                method: 'POST',
-                                body: JSON.stringify(this.state.postAdvert)
-                        })
-                                .then(res => res.json())
-                                .catch(console.log)
+                        state.advert.company_id = state.company.company_id;
+                        resolve(state)
+
+
                 } else {
-
-
                         fetch(`${api_url}/api/companies`, {
                                 headers: new Headers({ "Content-Type": "application/json" }),
                                 method: 'POST',
                                 body: JSON.stringify(
-                                        this.state.postCompany
+                                        state.company
                                 )
                         })
                                 .then(res => res.json())
                                 .then(company => {
-                                        const postAdvert = this.state.postAdvert;
-                                        postAdvert.company_id = company.company_id;
-                                        this.setState({ postAdvert: postAdvert });
+                                        state.company = company;
+                                        state.advert.company_id = company.company_id;
+                                        state.address.company_id = company.company_id;
+                                        resolve(state);
                                 })
-                                .then(() => {
-                                        fetch(`${api_url}/api/adverts`, {
-                                                headers: new Headers({ "Content-Type": "application/json" }),
-                                                method: 'POST',
-                                                body: JSON.stringify(this.state.postAdvert)
-                                        })
-                                                .then(res => res.json())
-                                                .catch(console.log)
-                                })
-                                .catch(console.log)
+
                 }
 
+        });
 
-
-
-
-
-
-        }
-
-
-
-        addAddressIdToState = (address_id) => {
-                this.setState({
-                        address_id: address_id
+        postAddress = (state) => new Promise(function (resolve, reject) {
+                fetch(`${api_url}/api/addresses/company`, {
+                        headers: new Headers({ "Content-Type": "application/json" }),
+                        method: 'POST',
+                        body: JSON.stringify(state.address)
                 })
-        }
+                        .then(res => res.json())
+                        .then(address => {
+                                state.address = address;
+                                state.advert.address_id = address.address_id;
+                                resolve(state);
+                        })
+        });
+
+        postAdvert = (state) => new Promise(function (resolve, reject) {
+
+                fetch(`${api_url}/api/adverts`, {
+                        headers: new Headers({ "Content-Type": "application/json" }),
+                        method: 'POST',
+                        body: JSON.stringify(state.advert)
+                })
+                        .then(res => res.json())
+                        .then(resolve(state))
+                        .catch(console.log)
+               
+           
+
+        })
+
+
+
+
 
 
         render() {
@@ -249,12 +293,14 @@ class AddAdvert extends React.Component {
 
 
                 return (<form>
+                        
                         <label>Job Title</label>
                         <input className="text" onChange={this.handleJob_titleChange} type="text" value={this.state.job_title} name="Job Title" size="40" />
 
+                       
 
-
-                        <AddCompany updatePostCompany={this.updatePostCompany} postCompany={this.state.postCompany} getCompanies={this.state.getCompanies} />
+                        <AddCompany getCompanyState={this.getCompanyState} setCompanyState={this.setCompanyState} getAllCompaniesState={this.getAllCompaniesState} setAllCompaniesState={this.setAllCompaniesState} />
+                        <AddAddress getAddressState={this.getAddressState} setAddressState={this.setAddressState} getAllAddressesState={this.getAllAddressesState} setAllAddressesState={this.setAllAddressesState}  />
                         {/* <label>Job Location</label>
                         <input type="text" onChange={this.handleJob_locationChange} name="Job Location" /> */}
 
@@ -262,7 +308,7 @@ class AddAdvert extends React.Component {
                         {/* <label>Job Location</label>
                         <input type="text" onChange={this.handleJob_locationChange} name="Job Location" /> */} */}
 
-
+                       
 
                         <label>Advert Reference</label>
                         <input type="text" onChange={this.handleAdvert_refChange} name="Application Reference" />
@@ -308,6 +354,7 @@ class AddAdvert extends React.Component {
 
 
                         <button className="bnt btn-default" type="submit" onClick={this.newApplication}>Add</button>
+                        
                 </form>
                 );
         }
@@ -319,25 +366,17 @@ class AddAdvert extends React.Component {
 
 
 
-                this.postAdvert()
+                // this.postAdvert()
+               console.log(this.getAddressState())
+                this.postCompany(this.state).then(state => this.postAddress(state)).then(state => this.postAdvert(state)).then(state => this.setState(state))
+                
+         
 
 
-                // var addCompany = new Promise(function (resolve, reject) {
-                //         setTimeout(function () {
-                //                 resolve('foo');
-                //         }, 300);
-                // });
-
-
-
-                // // Add to companies table if required
-                // if (this.state.company_id === null) {
-                //         this.postCompany(this.state.company_name)
-                // }
-
-                console.log(this.state.company_id)
+                // console.log(this.state.company_id)
 
         }
 }
+
 
 export default AddAdvert;
