@@ -18,9 +18,7 @@ class AddCompany extends React.Component {
 
                 this.props.setCompanyState(company)
         
-             
-               
-
+    
         }
 
         // handleWebsiteChange = (event) => {

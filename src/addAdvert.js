@@ -2,11 +2,14 @@ import React from 'react'
 import api_url from "./apiConfig";
 import AddCompany from "./addCompany";
 import AddAddress from "./addAddress";
+import AddContact from "./addContact";
 
 class AddAdvert extends React.Component {
         state = {
                 advert: {
                         company_id: null,
+                        address_id: null,
+                        contact_id: null,
                         job_title: '',
                         advert_ref: '',
                         contract_type: '',
@@ -32,7 +35,17 @@ class AddAdvert extends React.Component {
                         address_field: '',
                         postcode: ''
                 },
-                allAddresses: []
+                allAddresses: [],
+                contact: {
+                        company_id: null,
+                        address_id: null,
+                        contact_name: '',
+                        contact_position: '',
+                        capacity_known: '',
+                        reference: false,
+                        date_known: null
+                },
+                allContacts: []
         }
 
         // Fetch a list of all the companies so we know not to add the same company twice
@@ -40,7 +53,7 @@ class AddAdvert extends React.Component {
                 fetch(`${api_url}/api/companies/list`)
                         .then(res => res.json())
                         .then(body => {
-                                this.setState({ allCompanies: body })
+                                this.setAllCompaniesState(body)
                         })
         }
 
@@ -48,58 +61,118 @@ class AddAdvert extends React.Component {
 
         getAdvertState = () => this.state.advert;
 
-        setAdvertState = (advert) => {
-                var update = this.state.advert;
-                update = { ...update, ...advert  }
-                this.setState({advert: update});
+        updateAdvertState = (update) => {
+                var advert = this.state.advert;
+                advert = { ...advert, ...update }
+                this.setState({ advert: advert });
         }
+
+        setAdvertState = (advert) => this.setState({ advert: advert });
+        
 
         getCompanyState = () => this.state.company;
 
-        setCompanyState = (company) => {
-                var update = this.state.company;
-                update = { ...update, ...company  }
-                this.setState({company: update});
+        updateCompanyState = (update) => {
+                var company = this.state.company;
+                company = { ...company, ...update};
+                this.setState({ company: company });
+        }
 
-                // Fetch address list of company
+        setCompanyState = (company) => {
+                
+                this.setState({ company: company });
+                this.updateAddressState({address_id: null, company_id: company.company_id});
+                this.updateAdvertState({company_id: company.company_id});
+
+                
                 if (company.company_id != null) {
-                        fetch(`${api_url}/api/addresses/companies/${company.company_id}`)
+                        // Fetch address list of company
+                        fetch(`${api_url}/api/addresses/companies/live/${company.company_id}`)
                                 .then(res => res.json())
                                 .then(body => {
                                         console.log(body)
                                         this.setAllAddressesState(body)
 
-                                        // Set default values
-                                        this.setAddressState(body[0])
-                                        this.setAdvertState({address_id: body[0].address_id})
+                                        // // Set default values
+                                        // this.setAddressState(body[0])
+                                        // this.setAdvertState({address_id: body[0].address_id})
                                 })
+
+                        // Fetch contacts from company
+                        // fetch(`${api_url}/api/contacts/?company_id=${company.company_id}`)
+                        //         .then(res => res.json())
+                        //         .then(body => {
+                        //                 console.log(body)
+                        //                 this.setAllContactsState(body)
+                                       
+
+                        //                 // // Set default values
+                        //                 // this.setAddressState(body[0])
+                        //                 // this.setAdvertState({address_id: body[0].address_id})
+                        //         })
+                } else {
+                        this.setAllAddressesState([])
                 }
         }
 
         getAddressState = () => this.state.address;
 
-        setAddressState = (address) => {
-                var update = this.state.address;
-                update = { ...update, ...address, company_id: this.getCompanyState().company_id }
-                this.setState({address: update});
-                this.setAdvertState({address_id: address.address_id})
+        updateAddressState = (update) => {
+                var address = this.state.address;
+                address = { ...address, ...update}
+                this.setState({ address: address });
+                // this.setAdvertState({ address_id: address.address_id })
         }
+
+        setAddressState = (address) => {
+               
+                this.setState({ address: address });
+                this.setAdvertState({ address_id: address.address_id })
+
+                console.log(address)
+
+                // fetch(`${api_url}/api/contacts/?address_id=${address.address_id}`)
+                // .then(res => res.json())
+                // .then(body => {
+                //         console.log(body)
+                //         this.setState({allContacts: body})
+
+                //         // // Set default values
+                //         // this.setAddressState(body[0])
+                //         // this.setAdvertState({address_id: body[0].address_id})
+                // })
+        }
+
+        getContactState = () => this.state.contact;
+
+        setContactState = (contact) => {
+               
+                this.setState({ contact: contact });
+        }
+
+        updateContactState = (contact) => {
+                var update = this.state.contact;
+                update = [...update, ...contact]
+                this.setState({ contact: update });
+        }
+
 
         getAllCompaniesState = () => this.state.allCompanies;
 
-        setAllCompaniesState = (allCompanies) => {
-                var update = this.state.allCompanies;
-                update = [ ...update, ...allCompanies  ]
-                this.setState({allCompanies: update});
-        }
-
+        setAllCompaniesState = (allCompanies) => this.setState({ allCompanies: allCompanies });
+        
         getAllAddressesState = () => this.state.allAddresses;
 
-        setAllAddressesState = (allAddresses) => {
-                var update = this.state.allAddresses;
-                update = [ ...update, ...allAddresses  ]
-                this.setState({allAddresses: update});
-        }
+        setAllAddressesState = (allAddresses) => this.setState({ allAddresses: allAddresses });
+   
+        getAllContactsState = () => this.state.allContacts;
+
+        setAllContactsState = (allContacts) => this.setState({ allContacts: allContacts });
+        
+
+        
+
+       
 
         // Reaction with the DOM 
 
@@ -109,7 +182,7 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({job_title: event.target.value})
+                this.setAdvertState({ job_title: event.target.value })
         }
 
 
@@ -121,7 +194,7 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({advert_ref: event.target.value})
+                this.setAdvertState({ advert_ref: event.target.value })
         }
 
         handleContract_typeChange = (event) => {
@@ -131,7 +204,7 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({contract_type: event.target.value})
+                this.setAdvertState({ contract_type: event.target.value })
         }
 
         handleFull_time_part_timeChange = (event) => {
@@ -141,7 +214,7 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({full_time_part_time: event.target.value})
+                this.setAdvertState({ full_time_part_time: event.target.value })
 
 
 
@@ -154,7 +227,7 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({date_posted: event.target.value})
+                this.setAdvertState({ date_posted: event.target.value })
         }
 
 
@@ -165,7 +238,7 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({closing_date: event.target.value})
+                this.setAdvertState({ closing_date: event.target.value })
         }
 
 
@@ -176,7 +249,7 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({website: event.target.value})
+                this.setAdvertState({ website: event.target.value })
         }
 
         handleMin_salaryChange = (event) => {
@@ -186,7 +259,7 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({min_salary: event.target.value})
+                this.setAdvertState({ min_salary: event.target.value })
         }
         handleMax_salaryChange = (event) => {
 
@@ -195,7 +268,7 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({max_salary: event.target.value})
+                this.setAdvertState({ max_salary: event.target.value })
         }
         handleAdvert_descriptionChange = (event) => {
 
@@ -204,9 +277,9 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({advert_description: event.target.value})
+                this.setAdvertState({ advert_description: event.target.value })
         }
-     
+
 
         handleAgencyChange = () => {
 
@@ -215,13 +288,13 @@ class AddAdvert extends React.Component {
                 // this.setState({
                 //         postAdvert: postAdvert
                 // })
-                this.setAdvertState({agency: !this.getAdvertState().agency})
+                this.setAdvertState({ agency: !this.getAdvertState().agency })
 
         }
 
 
 
-       
+
 
         postCompany = (state) => new Promise(function (resolve, reject) {
                 // console.log(this.state)
@@ -267,6 +340,17 @@ class AddAdvert extends React.Component {
                         })
         });
 
+        postContact = (state) => new Promise(function (resolve, reject) {
+                fetch(`${api_url}/api/contact`, {
+                        headers: new Headers({ "Content-Type": "application/json" }),
+                        method: 'POST',
+                        body: JSON.stringify(state.contact)
+                })
+                        .then(res => res.json())
+                        .then(resolve(state))
+                        .catch(console.log)
+        })
+
         postAdvert = (state) => new Promise(function (resolve, reject) {
 
                 fetch(`${api_url}/api/adverts`, {
@@ -277,8 +361,8 @@ class AddAdvert extends React.Component {
                         .then(res => res.json())
                         .then(resolve(state))
                         .catch(console.log)
-               
-           
+
+
 
         })
 
@@ -293,14 +377,15 @@ class AddAdvert extends React.Component {
 
 
                 return (<form>
-                        
+
                         <label>Job Title</label>
                         <input className="text" onChange={this.handleJob_titleChange} type="text" value={this.state.job_title} name="Job Title" size="40" />
 
-                       
 
-                        <AddCompany getCompanyState={this.getCompanyState} setCompanyState={this.setCompanyState} getAllCompaniesState={this.getAllCompaniesState} setAllCompaniesState={this.setAllCompaniesState} />
-                        <AddAddress getAddressState={this.getAddressState} setAddressState={this.setAddressState} getAllAddressesState={this.getAllAddressesState} setAllAddressesState={this.setAllAddressesState}  />
+
+                        <AddCompany getCompanyState={this.getCompanyState} setCompanyState={this.setCompanyState} updateCompanyState={this.updateCompanyState}getAllCompaniesState={this.getAllCompaniesState} setAllCompaniesState={this.setAllCompaniesState} />
+                        <AddAddress getAddressState={this.getAddressState} setAddressState={this.setAddressState} updateAddressState={this.updateAddressState} getAllAddressesState={this.getAllAddressesState} setAllAddressesState={this.setAllAddressesState} />
+                        {/* <AddContact getContactState={this.getContactState} setContactState={this.setContactState} getAllContactsState={this.getAllContactsState} setAllContactsState={this.setAllContactsState} /> */}
                         {/* <label>Job Location</label>
                         <input type="text" onChange={this.handleJob_locationChange} name="Job Location" /> */}
 
@@ -308,7 +393,7 @@ class AddAdvert extends React.Component {
                         {/* <label>Job Location</label>
                         <input type="text" onChange={this.handleJob_locationChange} name="Job Location" /> */} */}
 
-                       
+
 
                         <label>Advert Reference</label>
                         <input type="text" onChange={this.handleAdvert_refChange} name="Application Reference" />
@@ -354,7 +439,7 @@ class AddAdvert extends React.Component {
 
 
                         <button className="bnt btn-default" type="submit" onClick={this.newApplication}>Add</button>
-                        
+
                 </form>
                 );
         }
@@ -367,10 +452,10 @@ class AddAdvert extends React.Component {
 
 
                 // this.postAdvert()
-               console.log(this.getAddressState())
+                console.log(this.getAddressState())
                 this.postCompany(this.state).then(state => this.postAddress(state)).then(state => this.postAdvert(state)).then(state => this.setState(state))
-                
-         
+
+
 
 
                 // console.log(this.state.company_id)
