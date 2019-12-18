@@ -45,7 +45,7 @@ console.log(address)
         }
 
         addressToggle = (event) => {
-                console.log('should not be here')
+                
                 this.setState({toggle: !this.state.toggle})
                 if(this.state.toggle) this.props.updateAddressState({address_id: null})
         }

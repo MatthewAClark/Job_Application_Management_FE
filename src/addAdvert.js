@@ -122,7 +122,6 @@ class AddAdvert extends React.Component {
         getAddressState = () => this.state.address;
 
         updateAddressState = (update) => {
-                console.log('should not be updateiong this')
                 var address = this.state.address;
                 address = { ...address, ...update }
                 this.setState({ address: address });
@@ -309,9 +308,10 @@ class AddAdvert extends React.Component {
 
                 if (state.company.company_id > 0) {
 
+                        // this is now handled in update state
 
-                        state.advert.company_id = state.company.company_id;
-                        resolve(state)
+                        // state.advert.company_id = state.company.company_id;
+                         resolve(state)
 
 
                 } else {
@@ -335,8 +335,8 @@ class AddAdvert extends React.Component {
         });
 
         postAddress = (state) => new Promise(function (resolve, reject) {
-                console.log(state.address)
-                if (state.address.address_id == null) {
+              
+                if (state.address.address_id == null && state.address.address_field != '' && state.address.postcode != '') {
                         fetch(`${api_url}/api/addresses/company`, {
                                 headers: new Headers({ "Content-Type": "application/json" }),
                                 method: 'POST',
@@ -355,14 +355,19 @@ class AddAdvert extends React.Component {
         });
 
         postContact = (state) => new Promise(function (resolve, reject) {
-                fetch(`${api_url}/api/contact`, {
-                        headers: new Headers({ "Content-Type": "application/json" }),
-                        method: 'POST',
-                        body: JSON.stringify(state.contact)
-                })
-                        .then(res => res.json())
-                        .then(resolve(state))
-                        .catch(console.log)
+                if(state.contact.contact_id == null && state.contact.contact_name != '') {
+                        fetch(`${api_url}/api/contact`, {
+                                headers: new Headers({ "Content-Type": "application/json" }),
+                                method: 'POST',
+                                body: JSON.stringify(state.contact)
+                        })
+                                .then(res => res.json())
+                                .then(resolve(state))
+                                .catch(console.log)
+                } else {
+                        resolve(state)
+                }
+                
         })
 
         postAdvert = (state) => new Promise(function (resolve, reject) {
