@@ -20,7 +20,7 @@ class AddAddress extends React.Component {
                 })
 
                 if (i > -1) address = this.props.getAllAddressesState()[i]; else address.address_field = event.target.value
-
+console.log(address)
                 this.props.setAddressState(address)
 
 
@@ -45,6 +45,7 @@ class AddAddress extends React.Component {
         }
 
         addressToggle = (event) => {
+                console.log('should not be here')
                 this.setState({toggle: !this.state.toggle})
                 if(this.state.toggle) this.props.updateAddressState({address_id: null})
         }

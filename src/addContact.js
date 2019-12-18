@@ -1,167 +1,187 @@
 import React from 'react'
 import api_url from "./apiConfig";
 
+
 class AddContact extends React.Component {
+
         state = {
-                addNewContact: false
+                toggle: false
         }
 
-      
-
-// DOM reaction
 
 
-        handleAddContact = () => {
-                this.props.setContactState({contact_id: null, contact_name: '', contact_position: '', capacity_known: '', reference: false})
-                this.setState({addNewContact: true})
-             
+        handleFind_contactChange = (event) => {
+
+                // Check the list to see if we already have that contact
+
+                var contact = {};
+                const i = this.props.getAllContactsState().findIndex(contact => {
+                        return contact.contact_name === event.target.value
+                })
+
+                if (i > -1) contact = this.props.getAllContactsState()[i]; else contact.contact_name = event.target.value
+
+                this.props.setContactState(contact)
+
+
         }
-
-        handleContact_findChange = (event) => {
-
-      
-
-                this.props.setContactState(this.props.getAllContactsState()[this.props.getAllContactsState().findIndex(contact => parseInt(contact.contact_id) === parseInt(event.target.value))])
-                
-                
-                // this.handleAddress_fieldChange()
-                console.log(event.target.value)
-        }
-
 
         handleContact_nameChange = (event) => {
 
-                // Check the list to see if we already have that address
-                // var postAddress = {}
-                // const i = this.props.getAllAddressesState().findIndex(address => {
-                //         return address.address_field === event.target.value
-                // })
+                // Check the list to see if we already have that contact
 
-                // if (i > -1) postAddress = this.props.getAllAddressesState()[i]; else postAddress = address_field.event.target.value 
-                this.props.setContactState({contact_id: null, contact_name: event.target.value})
-                
+                this.props.updateContactState({ contact_id: null, contact_name: event.target.value })
+
+
         }
 
         handleContact_positionChange = (event) => {
 
-                // Check the list to see if we already have that address
-                this.props.setContactState({contact_position: event.target.value})
-                // postAddress.postcode = event.target.value
-                // this.props.updatePostAddress(postAddress)
-        }
+                // Check the list to see if we already have that contact
 
+                this.props.updateContactState({ contact_id: null, contact_position: event.target.value })
+
+
+        }
+        
         handleCapacity_knownChange = (event) => {
 
-                // Check the list to see if we already have that address
-                this.props.setContactState({capacity_known: event.target.value})
-                // postAddress.postcode = event.target.value
-                // this.props.updatePostAddress(postAddress)
+                // Check the list to see if we already have that contact
+
+                this.props.updateContactState({ contact_id: null, capacity_known: event.target.value })
+
+
         }
+
+        handleReferenceChange = (event) => {
+
+                // Check the list to see if we already have that contact
+
+                this.props.updateContactState({ contact_id: null, reference: !this.getContactState().reference })
+
+
+        }
+
+        handleDate_knownChange = (event) => {
+
+                // Check the list to see if we already have that contact
+
+                this.props.updateContactState({ contact_id: null, date_known: event.target.value })
+
+
+        }
+        
+        contactToggle = (event) => {
+                this.setState({toggle: !this.state.toggle})
+                if(this.state.toggle) this.props.updateContactState({contact_id: null})
+        }
+
+
+
+        // newContact = () => {
+        //         this.state.newContact = !this.state.newContact
+        //         this.props.setContactState({})
+        // }
+
+
+        // handleWebsiteChange = (event) => {
+
+        //         this.setState({
+
+        //                 website: event.target.value
+        //         })
+        // }
 
 
 
         render() {
 
-                const getContacts = []
-                
-             
-                this.props.getAllContactsState().forEach(contact => {
-                      
-                        getContacts.push(<option value={contact.contact_id}>{contact.contact_name}</option> )})
-                
+                const contacts = []
+console.log(this.props.getAllContactsState())
+                this.props.getAllContactsState().forEach(contact => contacts.push(<option value={contact.contact_name} ></option>))
 
-                        if (this.state.addNewContact) {
-                               return( <form>
-   {/* <input list="addresses" onSelect={this.handleAddress_fieldChange} name="addresses"></input>
-                                <datalist  id="addresses">
-                                        {getAddresses}
-                                </datalist> */}
-       
-                                <label>Contact Name:</label>
-                                <input type='text' name="Contact name" onChange={this.handleContact_nameChange} value={this.props.getContactState().contact_name}/>
-                             
-                                <label>Position</label>
-                                <input type="text" onChange={this.handleContact_positionChange} value={this.props.getContactState().contact_position} name="position" />
+                if (this.state.toggle) {
+                        return (
+                                <form>
+                                        <label>Contact</label>
 
-                                <label>Capacity Known</label>
-                                <input type="text" onChange={this.handleCapacity_knownChange} value={this.props.getContactState().capacity_known} name="capacity known" />
-                                
-                                <button type='button' onClick={this.handleFindAddress} >Find Contact</button>   
+
+                                        <label>Name</label>
+                                        <input type="text" onChange={this.handleContact_nameChange} name="Contact Name" />
+
+                                        <label>Position</label>
+                                        <input type="text" onChange={this.handleContact_positionChange} name="position" />
+                                        
+                                        <label>Capacity Known</label>
+                                        <input type="text" onChange={this.handleCapacity_knownChange} name="Capacity known" />
+
+                                        <label>Reference?</label>
+
+                        <input type="checkbox" name="reference" value={this.props.getContactState().reference} onClick={this.handleReferenceChange} />
+
+
+
+                                        <button type="button" onClick={this.contactToggle}>Cancel</button>
+
+
+
+
+
 
                                 </form>
-                                )
+                        )
 
-                                                         
+                } else {
+                        return (<form>
+                                <label>Find Contact</label>
 
-                        } else {
-                                return (<form>
-                                       
-                                        <label>Find Contact</label>
-                                        
-                                        <select name="contact find" onChange={this.handleContact_findChange}>
-                
-                                              {getContacts}
-                
-                
-                                        </select>
-                                        <button type='button' onClick={this.handleAddContact} >New Contact</button> 
-                
-                                        
-                                        
-                
-                
-                
-                
-                
-                {/* 
-                
-                
-                                        <label>Industry</label>
-                                        <input type="text" onChange={this.handleIndustryChange} name="Industry" />
-                
-                                        <label>Sector</label>
-                                        <input type="text" onChange={this.handleSectorChange} name="Sector" />
-                
-                                        <label>URL</label>
-                                        <input type="text" onChange={this.handleCompany_urlChange} name="Company URL" /> */}
-                
-                
-                
-                
-                                        {/* <button className="bnt btn-default" type="submit" onClick={this.addLocation}>Add</button> */}
-                                </form>
-                                );
-                        }
-               
+
+
+                                <input list="contacts" onChange={this.handleFind_contactChange} name="contacts"></input>
+                                <datalist id="contacts">
+                                        {contacts}
+                                </datalist>
+
+
+                                <button type='button' onClick={this.contactToggle}>New Contact</button>
+
+
+
+                                {/* 
+        
+        
+                                <label>Industry</label>
+                                <input type="text" onChange={this.handleIndustryChange} name="Industry" />
+        
+                                <label>Sector</label>
+                                <input type="text" onChange={this.handleSectorChange} name="Sector" />
+        
+                                <label>URL</label>
+                                <input type="text" onChange={this.handleContact_urlChange} name="Contact URL" /> */}
+
+
+
+                                {/* 
+                                <button className="bnt btn-default" type="submit" onClick={this.addContact}>Add</button> */}
+                        </form>
+                        );
+                }
+
+
+
+
         }
 
-        // addLocation = (event) => {
+        // addContact = (event) => {
 
         //         // Comment out for development purposes only
         //         event.preventDefault();
 
         //         // 
-        //         this.props.addAddressIdToState(this.state.address_id);
-
-        //         // Add company to db if it doesn't already exist in db
-        //         if (this.state.company_id === null) {
 
 
-        //                 fetch(`${api_url}/api/companies`, {
-        //                         headers: new Headers({ "Content-Type": "application/json" }),
-        //                         method: 'POST',
-        //                         body: JSON.stringify({
+        //         // Add contact to db if it doesn't already exist in db
 
-        //                                 company_name: this.state.company_name,
-        //                                 sector: this.state.sector,
-        //                                 industry: this.state.industry,
-        //                                 company_url: this.state.company_url
-
-        //                         })
-        //                 })
-        //                         .then(res => res.json())
-        //                         .catch(console.log)
-        //         }
         // }
 }
 
