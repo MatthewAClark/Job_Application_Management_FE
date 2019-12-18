@@ -14,14 +14,22 @@ class AddAddress extends React.Component {
 
                 // Check the list to see if we already have that address
 
-                var address = {};
-                const i = this.props.getAllAddressesState().findIndex(address => {
-                        return address.address_field === event.target.value
-                })
 
-                if (i > -1) address = this.props.getAllAddressesState()[i]; else address.address_field = event.target.value
-console.log(address)
-                this.props.setAddressState(address)
+//                 var address = {};
+                
+//                 const i = this.props.getAllAddressesState().findIndex(address => {
+//                         // console.log(this.address.address_field.slice(this.address.address_field.indexOf('\n') === event.target.value))
+//                         return address.address_field === event.target.value
+                        
+//                 })
+
+//                 if (i > -1) address = this.props.getAllAddressesState()[i]; else address.address_field = event.target.value
+// console.log(address)
+//                 this.props.setAddressState(address)
+
+                this.props.setAddressState(this.props.getAllAddressesState().findIndex(address => {
+                        return address.address_id === event.target.value
+                }))
 
 
         }
@@ -71,8 +79,9 @@ console.log(address)
         render() {
 
                 const addresses = []
+                addresses.push(<option value='Please select' selected disabled hidden>none</option>)
 
-                this.props.getAllAddressesState().forEach(address => addresses.push(<option value={address.address_field} >{address.postcode}</option>))
+        this.props.getAllAddressesState().forEach(address => addresses.push(<option value={address.address_id} >{address.address_field}, {address.postcode}</option>))
 
                 if (this.state.toggle) {
                         return (
@@ -103,10 +112,10 @@ console.log(address)
 
 
 
-                                <input list="addresses" onChange={this.handleFind_addressChange} name="addresses"></input>
-                                <datalist id="addresses">
+                                {/* <input list="addresses" onChange={this.handleFind_addressChange} name="addresses"></input> */}
+                                <select id="addresses">
                                         {addresses}
-                                </datalist>
+                                </select>
 
 
                                 <button type='button' onClick={this.addressToggle}>New Address</button>

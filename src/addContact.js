@@ -29,7 +29,7 @@ class AddContact extends React.Component {
         handleContact_nameChange = (event) => {
 
                 // Check the list to see if we already have that contact
-
+                console.log('contactname')
                 this.props.updateContactState({ contact_id: null, contact_name: event.target.value })
 
 

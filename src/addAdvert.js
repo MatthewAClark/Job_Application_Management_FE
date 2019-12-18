@@ -80,13 +80,17 @@ class AddAdvert extends React.Component {
                 var company = this.state.company;
                 company = { ...company, ...update };
                 this.setState({ company: company });
+                this.setAddressState({ company_id: company.company_id });
+                this.updateAdvertState({ company_id: company.company_id });
+                this.setContactState({ company_id: company.company_id})
         }
 
         setCompanyState = (company) => {
 
                 this.setState({ company: company });
-                this.updateAddressState({ address_id: null, company_id: company.company_id });
+                this.setAddressState({ company_id: company.company_id });
                 this.updateAdvertState({ company_id: company.company_id });
+                this.setContactState({ company_id: company.company_id})
 
 
                 if (company.company_id != null) {
@@ -97,9 +101,7 @@ class AddAdvert extends React.Component {
                                         console.log(body)
                                         this.setAllAddressesState(body)
 
-                                        // // Set default values
-                                        // this.setAddressState(body[0])
-                                        // this.setAdvertState({address_id: body[0].address_id})
+                                       
                                 })
 
                         // Fetch contacts from company
@@ -110,12 +112,11 @@ class AddAdvert extends React.Component {
                                         this.setAllContactsState(body)
 
 
-                                        // // Set default values
-                                        // this.setAddressState(body[0])
-                                        // this.setAdvertState({address_id: body[0].address_id})
+                                    
                                 })
                 } else {
                         this.setAllAddressesState([])
+                        this.setAllContactsState([])
                 }
         }
 
@@ -126,26 +127,26 @@ class AddAdvert extends React.Component {
                 address = { ...address, ...update }
                 this.setState({ address: address });
                 
-                // this.setAdvertState({ address_id: address.address_id })
+             
         }
 
         setAddressState = (address) => {
 
                 this.setState({ address: address });
-                this.setAdvertState({ address_id: address.address_id })
+                this.updateAdvertState({ address_id: address.address_id })
 
                 console.log(address)
-
-                fetch(`${api_url}/api/contacts/?address_id=${address.address_id}`)
-                .then(res => res.json())
-                .then(body => {
-                        console.log(body)
-                        this.setAllContactsState(body)
-
-                        // // Set default values
-                        // this.setAddressState(body[0])
-                        // this.setAdvertState({address_id: body[0].address_id})
-                })
+                if(address.address_id) {
+                        fetch(`${api_url}/api/contacts/?address_id=${address.address_id}`)
+                        .then(res => res.json())
+                        .then(body => {
+                                console.log(body)
+                                this.setAllContactsState(body)
+        
+                              
+                        })
+                }
+              
         }
 
         getContactState = () => this.state.contact;
@@ -157,10 +158,10 @@ class AddAdvert extends React.Component {
                 this.updateAdvertState({contact_id: contact.contact_id})
         }
 
-        updateContactState = (contact) => {
-                var update = this.state.contact;
-                update = [...update, ...contact]
-                this.setState({ contact: update });
+        updateContactState = (update) => {
+                var contact = this.state.contact;
+                contact = {...contact, ...update}
+                this.setState({ contact: contact });
         }
 
 
@@ -324,9 +325,11 @@ class AddAdvert extends React.Component {
                         })
                                 .then(res => res.json())
                                 .then(company => {
+                                        // Update states of all tables with id
                                         state.company = company;
                                         state.advert.company_id = company.company_id;
                                         state.address.company_id = company.company_id;
+                                        state.contact.company_id = company.company_id;
                                         resolve(state);
                                 })
 
@@ -344,8 +347,11 @@ class AddAdvert extends React.Component {
                         })
                                 .then(res => res.json())
                                 .then(address => {
+
+                                        // Update IDs of state tables
                                         state.address = address;
                                         state.advert.address_id = address.address_id;
+                                        state.contact.address_id = address.address_id;
                                         resolve(state);
                                 })
                 } else {
@@ -356,13 +362,17 @@ class AddAdvert extends React.Component {
 
         postContact = (state) => new Promise(function (resolve, reject) {
                 if(state.contact.contact_id == null && state.contact.contact_name != '') {
-                        fetch(`${api_url}/api/contact`, {
+                        fetch(`${api_url}/api/contacts/`, {
                                 headers: new Headers({ "Content-Type": "application/json" }),
                                 method: 'POST',
                                 body: JSON.stringify(state.contact)
                         })
                                 .then(res => res.json())
-                                .then(resolve(state))
+                                .then(contact => {
+                                        state.contact = contact;
+                                        state.advert.contact_id = contact.contact_id;
+                                        resolve(state)
+                                })
                                 .catch(console.log)
                 } else {
                         resolve(state)
@@ -378,7 +388,10 @@ class AddAdvert extends React.Component {
                         body: JSON.stringify(state.advert)
                 })
                         .then(res => res.json())
-                        .then(resolve(state))
+                        .then(advert => {
+                                state.advert = advert.advert;
+                                resolve(state)
+                        })
                         .catch(console.log)
 
 
@@ -473,7 +486,10 @@ class AddAdvert extends React.Component {
 
                 // this.postAdvert()
                 console.log(this.getAdvertState())
-                this.postCompany(this.state).then(state => this.postAddress(state)).then(state => this.postAdvert(state)).then(state => this.setState(state))
+                console.log(this.getCompanyState())
+                console.log(this.getContactState())
+                console.log(this.getAddressState())
+                this.postCompany(this.state).then(state => this.postAddress(state)).then(state => this.postContact(state)).then(state => this.postAdvert(state)).then(state => this.setState(state))
 
 
 
