@@ -9,99 +9,43 @@ class AddAddress extends React.Component {
         }
 
 
-
+        // DOM elements
+        // Match the address to what we have in the db
         handleFind_addressChange = (event) => {
-
-                // Check the list to see if we already have that address
-
-
-//                 var address = {};
-                
-//                 const i = this.props.getAllAddressesState().findIndex(address => {
-//                         // console.log(this.address.address_field.slice(this.address.address_field.indexOf('\n') === event.target.value))
-//                         return address.address_field === event.target.value
-                        
-//                 })
-
-//                 if (i > -1) address = this.props.getAllAddressesState()[i]; else address.address_field = event.target.value
-// console.log(address)
-//                 this.props.setAddressState(address)
-
-                this.props.setAddressState(this.props.getAllAddressesState().findIndex(address => {
-                        return address.address_id === event.target.value
-                }))
-
-
+        //         console.log(event.target.value)
+        //        console.log(this.props.getAllAddressesState())
+                this.props.setAddressState(this.props.getAllAddressesState()[this.props.getAllAddressesState().findIndex(address => address.address_id == event.target.value)])
+                // console.log(this.props.getAllAddressesState()[this.props.getAllAddressesState().findIndex(address => address.address_id == event.target.value)])
         }
 
-        handleAddress_fieldChange = (event) => {
+        // Ensure address id is null, if we are adding a new address it's what we use to determine whether we need to post to the db
+        handleAddress_fieldChange = (event) => this.props.updateAddressState({ address_id: null, address_field: event.target.value })
 
-                // Check the list to see if we already have that address
+        handlePostcodeChange = (event) => this.props.updateAddressState({ address_id: null, postcode: event.target.value })
 
-                this.props.updateAddressState({ address_id: null, address_field: event.target.value })
-
-
+        addressToggle = (event) => { // Set by the New Address/Cancel button to determine whether we are selecting an already existing company in our db, or adding a new one
+                this.setState({ toggle: !this.state.toggle })
+                if (this.state.toggle) this.props.updateAddressState({ address_id: null })
         }
 
-        handlePostcodeChange = (event) => {
-
-                // Check the list to see if we already have that address
-
-                this.props.updateAddressState({ address_id: null, postcode: event.target.value })
-
-
-        }
-
-        addressToggle = (event) => {
-                
-                this.setState({toggle: !this.state.toggle})
-                if(this.state.toggle) this.props.updateAddressState({address_id: null})
-        }
-
-
-
-        // newAddress = () => {
-        //         this.state.newAddress = !this.state.newAddress
-        //         this.props.setAddressState({})
-        // }
-
-
-        // handleWebsiteChange = (event) => {
-
-        //         this.setState({
-
-        //                 website: event.target.value
-        //         })
-        // }
 
 
 
         render() {
 
+                // Generate the list of addresses from the db
                 const addresses = []
-                addresses.push(<option value='Please select' selected disabled hidden>none</option>)
-
-        this.props.getAllAddressesState().forEach(address => addresses.push(<option value={address.address_id} >{address.address_field}, {address.postcode}</option>))
+                addresses.push(<option value='Please select' selected disabled hidden>none</option>) // Add blank option
+                this.props.getAllAddressesState().forEach(address => addresses.push(<option value={address.address_id} >{address.address_field}, {address.postcode}</option>))
 
                 if (this.state.toggle) {
                         return (
                                 <form>
                                         <label>Address</label>
-
-
                                         <textarea className="textarea" name="address_field" onChange={this.handleAddress_fieldChange} value={this.props.getAddressState().address_field}></textarea>
-
                                         <label>Postcode</label>
                                         <input type="text" onChange={this.handlePostcodeChange} name="Postcode" />
-
-
-
                                         <button type="button" onClick={this.addressToggle}>Cancel</button>
-
-
-
-
-
 
                                 </form>
                         )
@@ -109,55 +53,15 @@ class AddAddress extends React.Component {
                 } else {
                         return (<form>
                                 <label>Find Address</label>
-
-
-
-                                {/* <input list="addresses" onChange={this.handleFind_addressChange} name="addresses"></input> */}
-                                <select id="addresses">
+                                <select id="addresses" onChange={this.handleFind_addressChange}>
                                         {addresses}
                                 </select>
-
-
                                 <button type='button' onClick={this.addressToggle}>New Address</button>
-
-
-
-                                {/* 
-        
-        
-                                <label>Industry</label>
-                                <input type="text" onChange={this.handleIndustryChange} name="Industry" />
-        
-                                <label>Sector</label>
-                                <input type="text" onChange={this.handleSectorChange} name="Sector" />
-        
-                                <label>URL</label>
-                                <input type="text" onChange={this.handleAddress_urlChange} name="Address URL" /> */}
-
-
-
-                                {/* 
-                                <button className="bnt btn-default" type="submit" onClick={this.addAddress}>Add</button> */}
                         </form>
                         );
                 }
 
-
-
-
         }
-
-        // addAddress = (event) => {
-
-        //         // Comment out for development purposes only
-        //         event.preventDefault();
-
-        //         // 
-
-
-        //         // Add address to db if it doesn't already exist in db
-
-        // }
 }
 
 export default AddAddress;

@@ -4,7 +4,7 @@ import 'bulma/css/bulma.css';
 import api_url from "./apiConfig";
 
 import AddAdvert from './addAdvert';
-import Applications from './Applications';
+import Adverts from './Adverts';
 import Advert from './Advert';
 
 
@@ -12,25 +12,30 @@ import Advert from './Advert';
 
 class App extends Component {
   state = {
-    adverts: []
+    allAdverts: []
   }
 
   componentDidMount() {
 
     // Fetch all the live adverts and put them on the state
     fetch(`${api_url}/api/adverts/live`)
-            .then(res => {
-                    return res.json();
-            })
-            .then(body => {
+      .then(res => {
+        return res.json();
+      })
+      .then(body => this.setAdvertState(body))
+  }
 
-                    console.log(body)
-                    this.setState({
-                            adverts: body
+// Getters and setters. These are accessed at App level and passed down the classes
+  getAdvertState = () => this.state.advert; // Gets the advert from the state
 
-                    })
-            })
-}
+  updateAdvertState = (update) => { // Updates the state without writing over entire advert
+          var advert = this.state.advert;
+          advert = { ...advert, ...update }
+          this.setState({ advert: advert });
+  }
+
+  setAdvertState = (advert) => this.setState({ advert: advert }); // writes over entire advert with new state
+
 
   render() {
     return (
@@ -39,39 +44,39 @@ class App extends Component {
           <header>
 
             {/* Navbar section */}
-           
+
             <section className="is-dark">
-            
-             
-                  
-                  <nav className="navbar bg-dark">
-                  <div className="container">
-                  <Link className="navbar-item bg-dark text-white" to="/Applications">Application Management</Link>
-                 
+
+
+
+              <nav className="navbar bg-dark">
+                <div className="container">
+                  <Link className="navbar-item bg-dark text-white" to="/Adverts">View Adverts</Link>
+
                   {/* <Link className="navbar-item bg-dark text-white" to="/addCompany">Add Company</Link>
                   <Link className="navbar-item bg-dark text-white" to="/addAddress">Add Address</Link>
                   <Link className="navbar-item bg-dark text-white" to="/addContact">Add Contact</Link>
                   <Link className="navbar-item bg-dark text-white" to="/addContract">Add Contract</Link> */}
-                  
-                    </div>
-                  
-                  </nav>
-                  
+
+                </div>
+
+              </nav>
+
             </section>
-           
+
           </header>
 
-          <Route exact path="/Applications" render={(props) => (
-            <Applications {...props} adverts={this.state.adverts}/>)} />
+          <Route exact path="/Adverts" render={(props) => (
+            <Adverts {...props} adverts={this.state.adverts} />)} />
 
-<Route exact path="/AddAdvert" render={(props) => (
+          <Route exact path="/AddAdvert" render={(props) => (
             <AddAdvert {...props} />)} />
-{/* 
+          {/* 
 <Route exact path="/Adverts/:advert_id" render={(props) => (
              <AddCompany {...props} />)} /> */}
 
-<Route exact path="/applications/:advert_id" component={Advert} />
-{/* 
+          <Route exact path="/applications/:advert_id" component={Advert} />
+          {/* 
 <Route exact path="/addAddress" render={(props) => (
              <AddAddress {...props} />)} />
 
@@ -80,13 +85,13 @@ class App extends Component {
 
 <Route exact path="/addContract" render={(props) => (
              <AddContract {...props} />)} /> */}
-         
 
-<footer className="bg-dark"></footer>
+
+          <footer className="bg-dark"></footer>
         </div>
-       
+
       </ BrowserRouter>
-      
+
     );
   }
 }

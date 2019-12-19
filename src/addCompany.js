@@ -3,22 +3,14 @@ import api_url from "./apiConfig";
 
 class AddCompany extends React.Component {
 
-
-
         handleCompany_nameChange = (event) => {
 
-                // Check the list to see if we already have that company
+                // Match the company name with a name in the db
 
                 var company = {};
-                const i = this.props.getAllCompaniesState().findIndex(company => {
-                        return company.company_name === event.target.value
-                })
-
+                const i = this.props.getAllCompaniesState().findIndex(company => company.company_name === event.target.value)
                 if (i > -1) company = this.props.getAllCompaniesState()[i]; else company.company_name = event.target.value
-
                 this.props.setCompanyState(company)
-        
-    
         }
 
         // handleWebsiteChange = (event) => {
@@ -33,23 +25,17 @@ class AddCompany extends React.Component {
 
         render() {
 
-                const companies = []
-
+                // Produce a list of all the companies in our db for our DOM
+                const companies = [];
                 this.props.getAllCompaniesState().forEach(company => companies.push(<option value={company.company_name} />))
 
 
                 return (<form>
                         <label>Company Name</label>
-
-
-
                         <input list="companies" onChange={this.handleCompany_nameChange} name="companies"></input>
                         <datalist id="companies">
                                 {companies}
                         </datalist>
-
-
-
 
 
                         {/* 
@@ -72,17 +58,6 @@ class AddCompany extends React.Component {
                 );
         }
 
-        // addCompany = (event) => {
-
-        //         // Comment out for development purposes only
-        //         event.preventDefault();
-
-        //         // 
-
-
-        //         // Add company to db if it doesn't already exist in db
-
-        // }
 }
 
 export default AddCompany;

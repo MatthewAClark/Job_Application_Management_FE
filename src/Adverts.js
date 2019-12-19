@@ -1,7 +1,7 @@
 import React from 'react'
 import api_url from "./apiConfig";
 
-class Applications extends React.Component {
+class Adverts extends React.Component {
       
 
         render() {
@@ -25,7 +25,7 @@ class Applications extends React.Component {
 
 
                         
-                        <a className="btn btn-primary btn-lg" href="/addadvert" role="button">Add Application</a>
+                        <a className="btn btn-primary btn-lg" href="/addadvert" role="button">Add Advert</a>
                         </div>
                       
                 
@@ -70,4 +70,4 @@ class Applications extends React.Component {
         // }
 }
 
-export default Applications;
+export default Adverts;
