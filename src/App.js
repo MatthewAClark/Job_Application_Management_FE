@@ -5,7 +5,7 @@ import api_url from "./apiConfig";
 
 import AddAdvert from './addAdvert';
 import Adverts from './Adverts';
-import Advert from './Advert';
+// import Advert from './Advert';
 
 
 
@@ -22,11 +22,11 @@ class App extends Component {
       .then(res => {
         return res.json();
       })
-      .then(body => this.setAdvertState(body))
+      .then(body => this.setAllAdvertsState(body))
   }
 
 // Getters and setters. These are accessed at App level and passed down the classes
-  getAdvertState = () => this.state.advert; // Gets the advert from the state
+  getallAdvertsState = () => this.state.allAdverts; // Gets the advert from the state
 
   updateAdvertState = (update) => { // Updates the state without writing over entire advert
           var advert = this.state.advert;
@@ -34,7 +34,7 @@ class App extends Component {
           this.setState({ advert: advert });
   }
 
-  setAdvertState = (advert) => this.setState({ advert: advert }); // writes over entire advert with new state
+  setAllAdvertsState = (adverts) => this.setState({ allAdverts: adverts }); // writes over entire advert with new state
 
 
   render() {
@@ -67,7 +67,7 @@ class App extends Component {
           </header>
 
           <Route exact path="/Adverts" render={(props) => (
-            <Adverts {...props} adverts={this.state.adverts} />)} />
+            <Adverts {...props} getAllAdvertsState={this.getallAdvertsState} />)} />
 
           <Route exact path="/AddAdvert" render={(props) => (
             <AddAdvert {...props} />)} />
@@ -75,7 +75,7 @@ class App extends Component {
 <Route exact path="/Adverts/:advert_id" render={(props) => (
              <AddCompany {...props} />)} /> */}
 
-          <Route exact path="/applications/:advert_id" component={Advert} />
+          <Route exact path="/adverts/:advert_id" component={AddAdvert} />
           {/* 
 <Route exact path="/addAddress" render={(props) => (
              <AddAddress {...props} />)} />
