@@ -54,9 +54,9 @@ class Company extends React.Component {
                 const companies = [];
                 this.state.companies.forEach((company, i) => companies.push(<option value={company.company_name} key={i}/>))
 
-                return (<div>
+                return (<div className="form-group">
                         <label>Company Name</label>
-                        <input disabled={this.props.disabled} list="companies" value={this.props.state.data.company_name} onChange={this.handleCompany_nameChange} name="companies"></input>
+                        <input className="form-control" disabled={this.props.disabled} list="companies" value={this.props.state.data.company_name} onChange={this.handleCompany_nameChange} name="companies"></input>
                         <datalist id="companies">
                                 {companies}
                         </datalist>

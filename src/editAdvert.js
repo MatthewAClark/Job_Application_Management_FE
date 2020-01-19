@@ -96,7 +96,7 @@ class EditAdvert extends React.Component {
 
         render() {
                 if (this.state.disabled) {
-                        return (<form>
+                        return (<form className="container">
 
                                 <Advert updateData={this.updateData} getData={this.getData} state={this.state} />
                                 <button className="bnt btn-default" type="button" onClick={this.disableToggle}>Edit</button>

@@ -44,9 +44,9 @@ class Professions extends React.Component {
                 const professions = [];
                 this.state.professions.forEach((profession, i) => professions.push(<option value={profession.profession} key={i}/>))
 
-                return (<div>
+                return (<div className="form-group">
                         <label>Profession</label>
-                        <input disabled={this.props.disabled} list="professions" onChange={this.handleProfession_nameChange} value={this.props.state.data.profession} name="professions"></input>
+                        <input disabled={this.props.disabled} list="professions" onChange={this.handleProfession_nameChange} className="form-control" value={this.props.state.data.profession} name="professions"></input>
                         <datalist id="professions">
                                 {professions}
                         </datalist>

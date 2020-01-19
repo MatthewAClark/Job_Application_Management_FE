@@ -36,13 +36,9 @@ class AddAdvert extends React.Component {
      
 
         render() {
-                return (<form>
-
+                return (<form className="container">
 
                         <Advert updateData={this.updateData} getData={this.getData} state={this.state} />
-
-
-
 
                         <button className="bnt btn-default" type="submit" onClick={this.newApplication}>Add</button>
 

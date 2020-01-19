@@ -55,23 +55,26 @@ class Address extends React.Component {
 
                 if (this.props.disabled || this.state.toggle) {
                         return (
-                                <div>
+                                <div className="form-group">
                                         <label>Address</label>
-                                        <textarea disabled={this.props.disabled} className="textarea" name="address_field" onChange={this.handleAddress_fieldChange} value={this.props.getData().address_field}></textarea>
+                                        <textarea className= "form-control" disabled={this.props.disabled} className="textarea" name="address_field" onChange={this.handleAddress_fieldChange} value={this.props.getData().address_field}></textarea>
                                         <label>Postcode</label>
-                                        <input disabled={this.props.disabled} type="text" onChange={this.handlePostcodeChange} value={this.props.getData().postcode} name="Postcode" />
+                                        <input className= "form-control" disabled={this.props.disabled} type="text" onChange={this.handlePostcodeChange} value={this.props.getData().postcode} name="Postcode" />
                                         <button type="button" disabled={this.props.disabled} onClick={this.addressToggle}>Cancel</button>
 
                                 </div>
                         )
 
                 } else {
-                        return (<div>
+                        return (<div className="form-group">
                                 <label>Find Address</label>
-                                <select id="addresses" onChange={this.handleFind_addressChange}>
+                                <div >
+                                <select className="form-control" id="addresses" onChange={this.handleFind_addressChange}>
                                         {addresses}
                                 </select>
                                 <button type='button' onClick={this.addressToggle}>New Address</button>
+                                </div>
+                               
                         </div>
                         );
                 }

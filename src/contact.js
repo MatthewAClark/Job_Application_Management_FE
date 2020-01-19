@@ -1,5 +1,6 @@
 import React from 'react'
 import ContactValues from './contactValues';
+import api_url from "./apiConfig";
 
 
 class Contact extends React.Component {
@@ -7,9 +8,16 @@ class Contact extends React.Component {
         state = {
                 toggle: false,
                 contact_type: '',
-                contact_value: ''
+                contact_value: '',
+                contact_values: []
         }
 
+        // componentDidUpdate() {
+        //         const contacts = []
+        //         this.props.state.contacts.forEach(contact => {
+        //                 if (contact !== null) contacts.push(<option value={contact.contact_name} ></option>)
+        //         })
+        // }
        
 
 
@@ -22,17 +30,24 @@ class Contact extends React.Component {
                 const i = this.props.state.contacts.findIndex(contact => contact.contact_name.toUpperCase() === event.target.value.toUpperCase())
                 if (i > -1) {
                         contact = { ...this.props.state.contacts[i] }
+                        fetch(`${api_url}/api/contacts/values/${contact.contact_id}`)
+                        .then(res => res.json())
+                        .then(body => this.props.updateData({contact_values: body}))
                         
                 } else {
-                        contact = { contact_name: event.target.value, contact_id: null }
+                        
+                        // contact = { contact_name: event.target.value, contact_id: null }
+                        // if (event.target.value.trim().length === 0) {
+                        //         contact.contact_id = undefined
+                        // }
+                        
+                        this.props.updateData({contact_values: [], contact_name: event.target.value, contact_id: undefined})
                 }
 
                 // Prevent blank data from being entered
-                if (event.target.value.trim().length === 0) {
-                        contact.contact_id = undefined
-                }
+                
 
-                this.props.updateData({ ...contact })
+                // this.props.updateData({ ...contact })
 
                 // Check the list to see if we already have that contact
                 // const i = this.props.getAllContactsState().findIndex(contact => contact.contact_name === event.target.value)
@@ -43,7 +58,8 @@ class Contact extends React.Component {
                 var contact_id = undefined;
                 if (event.target.value.trim().length > 0) contact_id = null;
                 this.props.updateData({contact_id: contact_id, contact_name: event.target.value })
-              
+
+             
         }
 
         handleAdd_values = (event) => {
@@ -73,8 +89,10 @@ class Contact extends React.Component {
         }
 
         render() {
+              
 
                 const contacts = []
+
                 this.props.state.contacts.forEach(contact => {
                         if (contact !== null) contacts.push(<option value={contact.contact_name} ></option>)
                 })
@@ -120,9 +138,9 @@ class Contact extends React.Component {
                                                 <option value='Mobile'></option>
                                                 <option value='Fax'></option>
                                         </datalist>
-                                        <input type="text" name="Contact Value" onChange={this.handleContact_valueChange} value={this.state.contact_value} />
+                                        <input type="text" disabled={this.props.disabled} name="Contact Value" onChange={this.handleContact_valueChange} value={this.state.contact_value} />
 
-                                        <button type="button" onClick={this.handleAdd_values}>Add Contact</button>
+                                        <button type="button" disabled={this.props.disabled} onClick={this.handleAdd_values}>Add Contact</button>
 
 
 
@@ -132,10 +150,10 @@ class Contact extends React.Component {
                         )
 
                 } else {
-                        return (<div>
+                        return (<div className="form-group">
                                 <label>Find Contact</label>
 
-                                <input list="contacts" onChange={this.handleFind_contactChange} name="contacts"></input>
+                                <input className="form-control" list="contacts" onChange={this.handleFind_contactChange} name="contacts"></input>
                                 <datalist id="contacts">
                                         {contacts}
                                 </datalist>
@@ -153,7 +171,8 @@ class Contact extends React.Component {
                                 <button type='button' onClick={this.contactToggle}>New Name</button>
                                 <br />
 
-                                <input list="contact_types" name="contact_type" onChange={this.handleContact_typeChange} value={this.state.contact_type}></input>
+<label>Contact Type</label>
+                                <input className="form-control" list="contact_types" name="contact_type" onChange={this.handleContact_typeChange} value={this.state.contact_type}></input>
                                 <datalist id="contact_types">
                                         <option value='Email'></option>
                                         <option value='Website'></option>
@@ -162,9 +181,11 @@ class Contact extends React.Component {
                                         <option value='Mobile'></option>
                                         <option value='Fax'></option>
                                 </datalist>
-                                <input type="text" name="Contact Value" onChange={this.handleContact_valueChange} value={this.state.contact_value} />
 
-                                <button type="button" onClick={this.handleAdd_values}>Add Contact</button>
+                                <label>Contact Value</label>
+                                <input className="form-control" disabled={this.props.disabled} type="text" name="Contact Value" onChange={this.handleContact_valueChange} value={this.state.contact_value} />
+
+                                <button disabled={this.props.disabled} type="button" onClick={this.handleAdd_values}>Add Contact</button>
 
 
                         </div>
