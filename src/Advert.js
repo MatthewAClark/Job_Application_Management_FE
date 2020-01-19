@@ -56,7 +56,13 @@ class Advert extends React.Component {
 
 
         render() {
+                
+             // Fix date reporting 
+                var date_posted = this.props.state.data.date_posted;
+                var closing_date = this.props.state.data.closing_date;
 
+                if(date_posted === null) date_posted = '';
+                if(closing_date === null) closing_date = '';
 
                 return (
                         <div className="">
@@ -116,15 +122,15 @@ class Advert extends React.Component {
                                                 </div>
 
                                                 <div className="row">
-                                                        <div className="col-md-5">
+                                                        <div className="col-md-6">
                                                                 <label>Date Posted</label>
 
-                                                                <input type="date" className="form-control" disabled={this.props.state.disabled} onChange={this.handleDate_postedChange} value={this.props.state.data.date_posted.slice(0,10)} name="Date Posted" />
+                                                                <input type="date" className="form-control" disabled={this.props.state.disabled} onChange={this.handleDate_postedChange} value={date_posted.slice(0,10)} name="Date Posted" />
                                                                 
                                                         </div>
-                                                        <div className="col-md-5">
+                                                        <div className="col-md-6">
                                                                 <label>Closing Date</label>
-                                                                <input type="date" className="form-control" disabled={this.props.state.disabled} onChange={this.handleClosing_dateChange} value={this.props.state.data.closing_date.slice(0,10)} name="Closing Date" />
+                                                                <input type="date" className="form-control" disabled={this.props.state.disabled} onChange={this.handleClosing_dateChange} value={closing_date.slice(0,10)} name="Closing Date" />
                                                         </div>
                                                 </div>
                                         </div>

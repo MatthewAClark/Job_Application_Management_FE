@@ -14,7 +14,9 @@ class AddAdvert extends React.Component {
                         contact_name: '',
                         contact_position: '',
                         capacity_known: '',
-                        date_seen: null
+                        date_seen: null,
+                        date_posted: null,
+                        closing_date: null
                 },
                 disabled: false
         }
@@ -50,7 +52,7 @@ class AddAdvert extends React.Component {
 
                 // Comment out for development purposes only
                 event.preventDefault();
-
+                
 
                 fetch(`${api_url}/api/adverts`, {
                                         headers: new Headers({ "Content-Type": "application/json" }),
