@@ -81,7 +81,7 @@ class Advert extends React.Component {
                                                 <div className="row">
                                                         <div className="col-md-12">
                                                                 <label>Advert Description</label>
-                                                                <textarea className="textarea" className="form-control" disabled={this.props.state.disabled} name="advert_description" onChange={this.handleAdvert_descriptionChange} value={this.props.state.data.advert_description} cols="50" rows="21"></textarea>
+                                                                <textarea className="textarea form-control" disabled={this.props.state.disabled} name="advert_description" onChange={this.handleAdvert_descriptionChange} value={this.props.state.data.advert_description} cols="50" rows="21"></textarea>
                                                         </div>
 
                                                 </div>

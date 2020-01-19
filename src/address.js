@@ -17,7 +17,7 @@ class Address extends React.Component {
         handleFind_addressChange = (event) => {
                 
 
-                this.props.updateData(this.props.state.addresses[this.props.state.addresses.findIndex(address => address.address_id == event.target.value)])
+                this.props.updateData(this.props.state.addresses[this.props.state.addresses.findIndex(address => address.address_id === event.target.value)])
                
         }
 
@@ -57,7 +57,7 @@ class Address extends React.Component {
                         return (
                                 <div className="form-group">
                                         <label>Address</label>
-                                        <textarea className= "form-control" disabled={this.props.disabled} className="textarea" name="address_field" onChange={this.handleAddress_fieldChange} value={this.props.getData().address_field}></textarea>
+                                        <textarea disabled={this.props.disabled} className="textarea form-control" name="address_field" onChange={this.handleAddress_fieldChange} value={this.props.getData().address_field}></textarea>
                                         <label>Postcode</label>
                                         <input className= "form-control" disabled={this.props.disabled} type="text" onChange={this.handlePostcodeChange} value={this.props.getData().postcode} name="Postcode" />
                                         <button type="button" disabled={this.props.disabled} onClick={this.addressToggle}>Cancel</button>
