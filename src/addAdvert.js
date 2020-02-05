@@ -6,17 +6,24 @@ class AddAdvert extends React.Component {
         state = {
                 // Table values we need for when we update
                 data: {
-                        agency: false,
-                        voluntary: false,
+                        occupation_id: undefined,
+                        occupation: '',
+                        company_id: undefined,
+                        company_name: '',
                         address_field: '',
                         postcode: '',
-                        contact_values: [],
-                        contact_name: '',
-                        contact_position: '',
-                        capacity_known: '',
-                        date_seen: null,
+                        contacts: [],
+                        address_id: undefined,
+                        position_title: '',
+                        advert_ref: '',
+                        contract_type: '',
+                        contract_hours: '',
                         date_posted: null,
-                        closing_date: null
+                        closing_date: null,
+                        advert_url: '',
+                        min_salary: '',
+                        max_salary: '',
+                        advert_description: ''
                 },
                 disabled: false
         }
@@ -35,12 +42,16 @@ class AddAdvert extends React.Component {
 
         getData = () => this.state.data;
 
-     
+       addContact = (contact) => {
+               var contacts = this.state.data.contacts
+               contacts.push(contact)
+               this.updateData({contacts: contacts})
+       }
 
         render() {
                 return (<form className="container">
 
-                        <Advert updateData={this.updateData} getData={this.getData} state={this.state} />
+                        <Advert addContact={this.addContact} updateData={this.updateData} getData={this.getData} state={this.state} addContact={this.addContact}/>
 
                         <button className="bnt btn-default" type="submit" onClick={this.newApplication}>Add</button>
 
@@ -49,22 +60,28 @@ class AddAdvert extends React.Component {
         }
 
         newApplication = (event) => {
-
+                // console.log(this.state.data)
                 // Comment out for development purposes only
-                event.preventDefault();
-                
+                //event.preventDefault();
+                if (typeof (this.state.data.date_posted) === "string") {
+                        if (this.state.data.date_posted.length < 1) this.updateData({ date_posted: null })
+                }
+
+                if (typeof (this.state.data.closing_date) === "string") {
+                        if (this.state.data.closing_date.length < 1) this.updateData({ closing_date: null })
+                }
 
                 fetch(`${api_url}/api/adverts`, {
-                                        headers: new Headers({ "Content-Type": "application/json" }),
-                                        method: 'POST',
-                                        body: JSON.stringify(this.state.data)
-                                })
-                                        .then(res => res.json())
-                                        .then(data => console.log(data))
-                                        .catch(console.log)
-                       
-                }
+                        headers: new Headers({ "Content-Type": "application/json" }),
+                        method: 'POST',
+                        body: JSON.stringify(this.state.data)
+                })
+                        .then(res => res.json())
+                        .then(data => console.log(data))
+                        .catch(console.log)
+
+        }
 }
 
 
-        export default AddAdvert;
+export default AddAdvert;

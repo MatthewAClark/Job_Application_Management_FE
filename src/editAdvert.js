@@ -125,9 +125,14 @@ class EditAdvert extends React.Component {
         editThisAdvert = (event) => {
 
                 // Comment out for development purposes only
-                event.preventDefault();
-                if (this.state.data.date_posted === '') this.updateData({date_posted: null})
-                if (this.state.data.closing_date === '') this.updateData({closing_date: null})
+                // event.preventDefault();
+                if(typeof(this.state.data.date_posted)==="string") {
+                        if(this.state.data.date_posted.length < 1) this.updateData({date_posted: null})
+                }
+
+                if(typeof(this.state.data.closing_date)==="string") {
+                        if(this.state.data.closing_date.length < 1) this.updateData({closing_date: null})
+                }
 
                 // // this.postAdvert()
 
