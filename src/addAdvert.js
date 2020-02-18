@@ -23,6 +23,7 @@ class AddAdvert extends React.Component {
                         advert_url: '',
                         min_salary: '',
                         max_salary: '',
+                        skills: [],
                         advert_description: ''
                 },
                 disabled: false
@@ -60,9 +61,10 @@ class AddAdvert extends React.Component {
         }
 
         newApplication = (event) => {
-                // console.log(this.state.data)
-                // Comment out for development purposes only
+                
+                // Comment out for production - for development purposes only
                 //event.preventDefault();
+                
                 if (typeof (this.state.data.date_posted) === "string") {
                         if (this.state.data.date_posted.length < 1) this.updateData({ date_posted: null })
                 }
@@ -79,6 +81,8 @@ class AddAdvert extends React.Component {
                         .then(res => res.json())
                         .then(data => console.log(data))
                         .catch(console.log)
+
+                // console.log(this.state.data)
 
         }
 }
