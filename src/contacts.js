@@ -77,10 +77,10 @@ class Contact extends React.Component {
 
                 return (
                         <div>
-                                <label>Contact</label>
-                                <br />
+                        <div className="row">
 
-                                <input disabled={this.state.disabled} value={this.props.contact.contact_name}></input>
+                                <h3 className="col-md-4">{this.props.contact.contact_name}</h3>
+
                                 {/* <input disabled value={this.props.contact.contact_name} type="text" onChange={this.handleContact_nameChange} name="Contact Name" /> */}
 
                                 {/* <label>Position</label>
@@ -92,18 +92,23 @@ class Contact extends React.Component {
                                         <label>Reference?</label> */}
 
                                 {/* <input disabled={this.props.disabled} type="checkbox" name="reference" value={this.props.contact.reference} onClick={this.handleReferenceChange} /> */}
+                                <div className="col-md-8">
+                                        {this.props.contact.contact_methods.map(value => {
+                                                return (<div key={value.value_id}>
 
-                                {this.props.contact.contact_methods.map(value => {
-                                        return (<div key={value.value_id}>
-
-                                                <ContactValues value={value} />
+                                                        <ContactValues value={value} />
 
 
-                                        </div>)
-                                })}
+                                                </div>)
+                                        })}
+                                </div>
+
                                 {/* <button disabled={this.props.disabled} type="button" onClick={this.contactToggle}>Cancel</button> */}
                                 <br />
+                        </div>
 
+                        <div className="row">
+                                <div className="col-md-12">
                                 <input list="contact_methods" name="contact_method" onChange={this.handleContact_methodChange} value={this.state.contact_method}></input>
                                 <datalist id="contact_methods">
                                         <option value='Email'></option>
@@ -116,11 +121,14 @@ class Contact extends React.Component {
                                 <input type="text" disabled={this.props.disabled} name="Contact Value" onChange={this.handleContact_valueChange} value={this.state.contact_value} />
 
                                 <button type="button" disabled={this.props.disabled} onClick={this.handleAdd_values}>Add Method</button>
+                                </div>
+                               
 
 
 
 
 
+                        </div>
                         </div>
                 )
 

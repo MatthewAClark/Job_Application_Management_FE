@@ -16,7 +16,7 @@ class Advert extends React.Component {
                 allAddresses: [],
                 allContacts: [],
                 contacts: [],
-                address_disabled: true,
+                newAddress: true,
                 contact_id: undefined,
                 contact_name: '',
                 contact_methods: []
@@ -110,6 +110,9 @@ class Advert extends React.Component {
 
 
                 this.props.updateData(this.state.allAddresses[this.state.allAddresses.findIndex(address => address.address_id.toString() === event.target.value.toString())])
+                this.setState({
+                        newAddress: false
+                })
 
         }
 
@@ -138,7 +141,7 @@ class Advert extends React.Component {
                         this.setState({
                                 contact_id: contact_id,
                                 contact_name: event.target.value,
-                                
+
                         })
                 }
 
@@ -190,8 +193,10 @@ class Advert extends React.Component {
 
         handlePostcodeChange = (event) => this.props.updateData({ address_id: null, postcode: event.target.value })
 
-        addressToggle = (event) => { // Set by the New Address/Cancel button to determine whether we are selecting an already existing company in our db, or adding a new one
-                this.setState({ address_disabled: !this.state.address_disabled })
+
+
+        newAddress = (event) => { // Set by the New Address/Cancel button to determine whether we are selecting an already existing company in our db, or adding a new one
+                this.setState({ newAddress: true })
                 // if (!this.state.address_disabled) this.props.updateData({ address_id: null })
                 this.props.state.data.address_field = ''
                 this.props.state.data.postcode = ''
@@ -203,21 +208,23 @@ class Advert extends React.Component {
                         fetch(`${api_url}/api/contacts/methods/${this.state.contact_id}`)
                                 .then(res => res.json())
                                 .then(body => {
+                                        // Add contact with contact methods to contacts state
                                         this.props.addContact({
                                                 contact_id: this.state.contact_id,
                                                 contact_name: this.state.contact_name,
                                                 contact_methods: body
                                         })
                                         // if (!this.state.address_disabled) this.props.updateData({ address_id: null })
+                                        // Reset contact field in this form
                                         this.setState({
                                                 contact_id: undefined,
                                                 contact_name: '',
                                                 contact_methods: []
                                         })
-                                     
+
                                 })
                 } else {
-                        if(this.state.contact_id === null ) {
+                        if (this.state.contact_id === null) {
                                 this.props.addContact({
                                         contact_id: this.state.contact_id,
                                         contact_name: this.state.contact_name,
@@ -291,6 +298,14 @@ class Advert extends React.Component {
 
                                                         </div>
                                                 </div>
+
+                                                <div className="row">
+                                                        <div className="col-md-12">
+                                                                <label>Advert Website</label>
+                                                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleWebsiteChange} value={this.props.state.data.advert_url} name="Advert URL" />
+                                                        </div>
+                                                </div>
+
                                                 <div className="row">
                                                         <div className="col-md-12">
                                                                 <label>Advert Description</label>
@@ -298,148 +313,147 @@ class Advert extends React.Component {
                                                         </div>
 
                                                 </div>
-                                                <div className="row">
-                                                        <div className="col-md-8">
-                                                                <label>Advert Website</label>
-                                                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleWebsiteChange} value={this.props.state.data.advert_url} name="Advert URL" />
-                                                        </div>
-
-                                                        <div className="col-md-4">
-                                                                <label>Advert Reference</label>
-                                                                <input className="form-control" type="text" disabled={this.props.state.disabled} onChange={this.handleAdvert_refChange} value={this.props.state.data.advert_ref} name="Advert Reference" />
-                                                        </div>
-                                                </div>
-                                                <div className="row">
-                                                        <div className="col-md-4">
-                                                                <label>Contract Type</label>
-                                                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleContract_typeChange} value={this.props.state.data.contract_type} name="Contract Type" />
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                                <label>Full Time or Part Time?</label>
-                                                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleContract_hoursChange} value={this.props.state.data.contract_hours} name="Full Time or Part Time" />
-                                                        </div>
-
-                                                        <div className="col-md-4">
-                                                                <label>Job Board</label>
-                                                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleJob_boardChange} value={this.props.state.data.job_board} name="Location" />
-                                                        </div>
-
-                                                        <div className="col-md-4">
-                                                                <label>Location</label>
-                                                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleJob_locationChange} value={this.props.state.data.job_location} name="Location" />
-                                                        </div>
-                                                </div>
-                                                <div className="row">
-                                                        <div className="col-md-4">
-                                                                <label>Minimum Salary</label>
-                                                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleMin_salaryChange} value={this.props.state.data.min_salary} name="Min Sal" />
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                                <label>Maximum Salary</label>
-                                                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleMax_salaryChange} value={this.props.state.data.max_salary} name="Max Sal" />
-                                                        </div>
-                                                </div>
-
-                                                <div className="row">
-                                                        <div className="col-md-6">
-                                                                <label>Date Posted</label>
-
-                                                                <input type="date" className="form-control" disabled={this.props.state.disabled} onChange={this.handleDate_postedChange} value={date_posted.slice(0, 10)} name="Date Posted" />
-
-                                                        </div>
-                                                        <div className="col-md-6">
-                                                                <label>Closing Date</label>
-                                                                <input type="date" className="form-control" disabled={this.props.state.disabled} onChange={this.handleClosing_dateChange} value={closing_date.slice(0, 10)} name="Closing Date" />
-                                                        </div>
-                                                </div>
-                                        </div>
-                                        <div className="col-md-4">
-                                                <div className="row">
-                                                        <div className="col-md-4 checkbox">
-                                                                <label>Agency?</label>
-
-
-                                                                <input type="checkbox" className="checkbox " disabled={this.props.state.disabled} name="agency" value={this.props.state.data.agency} onClick={this.handleAgencyChange} />
-                                                        </div>
-                                                </div>
-
-                                                <div className="row">
-                                                        <div className="col-md-4 checkbox">
-                                                                <label>Voluntary?</label>
-
-
-                                                                <input type="checkbox" className="checkbox " disabled={this.props.state.disabled} name="voluntary" value={this.props.state.data.voluntary} onClick={this.handleVoluntaryChange} />
-                                                        </div>
-                                                </div>
-                                                <div className="row">
-                                                        <div className="col-md-12">
-
-                                                                <label>Company Name</label>
-                                                                <input className="form-control" disabled={this.props.disabled} list="companies" value={this.props.state.data.company_name} onChange={this.handleFind_companyChange} name="companies"></input>
-                                                                <datalist id="companies">
-                                                                        {companies}
-                                                                </datalist>
-                                                        </div>
-
-                                                </div>
 
                                                 <div className="row">
                                                         <div className="col-md-12">
-                                                                <button type='button' disabled={this.state.address_disabled} onClick={this.addressToggle}>Select Address</button>
-                                                                <button type="button" disabled={!this.state.address_disabled} onClick={this.addressToggle}>Add New Address</button>
-                                                                <label>Select Address</label>
+                                                        <label>Select Address</label>
+                                                <div className="row">
+
+
+                                                        <div className="col-md-5">
+                                                                {/* <button type='button' disabled={this.state.address_disabled} onClick={this.addressToggle}>Select Address</button> */}
+                                                        </div>
+                                                        <div className="col-md-7">
 
                                                                 <div >
-                                                                        <select disabled={!this.state.address_disabled} className="form-control" id="addresses" onChange={this.handleFind_addressChange}>
+                                                                        <select className="form-control" id="addresses" onChange={this.handleFind_addressChange}>
                                                                                 {addresses}
                                                                         </select>
 
 
                                                                         {/* <Address disabled={this.props.state.disabled} state={this.state} updateData={this.props.updateData} getData={this.props.getData} /> */}
                                                                 </div>
-                                                                <div className="form-group">
-                                                                        <label>Address</label>
-                                                                        <textarea disabled={this.state.address_disabled} className="textarea form-control" name="address_field" onChange={this.handleAddress_fieldChange} value={this.props.getData().address_field}></textarea>
-                                                                        <label>Postcode</label>
-                                                                        <input className="form-control" disabled={this.state.address_disabled} type="text" onChange={this.handlePostcodeChange} value={this.props.getData().postcode} name="Postcode" />
-
-
-                                                                </div>
-                                                        </div>
-
-                                                        {this.props.state.data.contacts.map((contact, i) => {
-                                                                return (<div key={i}>
-
-                                                                        {console.log(contact)}
-                                                                        <Contact disabled={this.props.state.disabled} i={i} state={this.state} contact={contact} updateData={this.props.updateData} getData={this.props.getData} />
-
-                                                                </div>)
-                                                        })}
-
-                                                        <div className="row">
-
-                                                                {/* <AddContact disabled={this.props.state.disabled} state={this.state} updateData={this.props.updateData} getData={this.props.getData} /> */}
-
-
-
-
-                                                                <div className="col-md-12">
-                                                                        <label>Contact Name</label>
-                                                                        <input className="form-control" disabled={this.props.disabled} list="contacts" value={this.state.contact_name} onChange={this.handleFind_contactChange} name="contacts"></input>
-                                                                        <datalist id="contacts">
-                                                                                {contacts}
-                                                                        </datalist>
-                                                                        <button type="button" disabled={this.props.disabled} onClick={this.handleAddContact}>Add Contact</button>
-                                                                </div>
                                                         </div>
 
                                                 </div>
+
+
+                                                <div className="row">
+                                                        <div className="col-md-5">
+                                                                <button type="button" disabled={this.state.newAddress} onClick={this.newAddress}>Clear Address</button>
+                                                        </div>
+                                                        <div className="col-md-7">
+                                                                <div className="form-group">
+                                                                        <label>Address</label>
+                                                                        <textarea disabled={!this.state.newAddress} className="textarea form-control" name="address_field" onChange={this.handleAddress_fieldChange} value={this.props.getData().address_field}></textarea>
+                                                                        <label>Postcode</label>
+                                                                        <input className="form-control" disabled={!this.state.newAddress} type="text" onChange={this.handlePostcodeChange} value={this.props.getData().postcode} name="Postcode" />
+
+
+                                                                </div>
+
+
+                                                        </div>
+                                                </div>
                                         </div>
+                                </div>
+                        </div>
+
+                        <div className="col-md-4">
+                                <label>Company Name</label>
+                                <input className="form-control" disabled={this.props.disabled} list="companies" value={this.props.state.data.company_name} onChange={this.handleFind_companyChange} name="companies"></input>
+                                <datalist id="companies">
+                                        {companies}
+                                </datalist>
+
+                                <label>Advert Reference</label>
+                                <input className="form-control" type="text" disabled={this.props.state.disabled} onChange={this.handleAdvert_refChange} value={this.props.state.data.advert_ref} name="Advert Reference" />
+
+                                <label>Contract Type</label>
+                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleContract_typeChange} value={this.props.state.data.contract_type} name="Contract Type" />
+
+                                <label>Full Time or Part Time?</label>
+                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleContract_hoursChange} value={this.props.state.data.contract_hours} name="Full Time or Part Time" />
+
+                                <label>Job Board</label>
+                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleJob_boardChange} value={this.props.state.data.job_board} name="Location" />
+
+                                <label>Location</label>
+                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleJob_locationChange} value={this.props.state.data.job_location} name="Location" />
+
+                                <label>Minimum Salary</label>
+                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleMin_salaryChange} value={this.props.state.data.min_salary} name="Min Sal" />
+
+                                <label>Maximum Salary</label>
+                                <input type="text" className="form-control" disabled={this.props.state.disabled} onChange={this.handleMax_salaryChange} value={this.props.state.data.max_salary} name="Max Sal" />
+
+                                <label>Date Posted</label>
+
+                                <input type="date" className="form-control" disabled={this.props.state.disabled} onChange={this.handleDate_postedChange} value={date_posted.slice(0, 10)} name="Date Posted" />
+
+                                <label>Closing Date</label>
+                                <input type="date" className="form-control" disabled={this.props.state.disabled} onChange={this.handleClosing_dateChange} value={closing_date.slice(0, 10)} name="Closing Date" />
+                                <div className="row">
+                                        <div className="col-md-6">
+                                                <label>Agency?</label>
+                                                <input type="checkbox" className="checkbox " disabled={this.props.state.disabled} name="agency" value={this.props.state.data.agency} onClick={this.handleAgencyChange} />
+
+                                        </div>
+
+                                        <div className="col-md-6">
+
+                                                <label>Voluntary?</label>
+                                                <input type="checkbox" className="checkbox " disabled={this.props.state.disabled} name="voluntary" value={this.props.state.data.voluntary} onClick={this.handleVoluntaryChange} />
+                                        </div>
+                                </div>
+
+                                {this.props.state.data.contacts.map((contact, i) => {
+                                        return (<div key={i}>
+
+
+                                                <Contact disabled={this.props.state.disabled} i={i} state={this.state} contact={contact} updateData={this.props.updateData} getData={this.props.getData} />
+
+                                        </div>)
+                                })}
+
+
+                                {/* <AddContact disabled={this.props.state.disabled} state={this.state} updateData={this.props.updateData} getData={this.props.getData} /> */}
+
+
+
+
+                                {/* <div className="col-md-4"> */}
+                                <label>Contact Name</label>
+                                <input className="form-control" disabled={this.props.disabled} list="contacts" value={this.state.contact_name} onChange={this.handleFind_contactChange} name="contacts"></input>
+                                <datalist id="contacts">
+                                        {contacts}
+                                </datalist>
+                                <button type="button" disabled={this.props.disabled} onClick={this.handleAddContact}>Add Contact</button>
+                                {/* </div> */}
+                        </div>
+
+
+                                </div >
+
+
+                        <div className="row">
+
+
+                                <div className="col-md-4">
 
                                 </div>
 
 
+
+
                         </div>
+                        </div >
+
+
+
+
+
+
                 );
         }
 
