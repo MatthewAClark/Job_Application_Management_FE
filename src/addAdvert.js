@@ -63,7 +63,7 @@ class AddAdvert extends React.Component {
         newApplication = (event) => {
                 
                 // Comment out for production - for development purposes only
-                //event.preventDefault();
+                // event.preventDefault();
                 
                 if (typeof (this.state.data.date_posted) === "string") {
                         if (this.state.data.date_posted.length < 1) this.updateData({ date_posted: null })

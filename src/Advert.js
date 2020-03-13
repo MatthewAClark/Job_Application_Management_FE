@@ -213,6 +213,8 @@ class Advert extends React.Component {
 
         handleAgencyChange = () => this.props.updateData({ agency: !this.props.state.data.agency })
 
+      
+
         handleVoluntaryChange = () => this.props.updateData({ voluntary: !this.props.state.data.voluntary })
 
 
@@ -240,7 +242,8 @@ class Advert extends React.Component {
 
         handleAddSkill = (event) => { // Set by the New Address/Cancel button to determine whether we are selecting an already existing company in our db, or adding a new one
                 var skills = this.props.state.data.skills
-                skills.push({skill_id: this.state.skill_id, skill_name: this.state.skill_name})
+                console.log(skills)
+                skills.push({skill_id: this.state.skill_id, skill_name: this.state.skill_name, essential: false})
                 this.props.updateData({ skills: skills })
                 // if (!this.state.address_disabled) this.props.updateData({ address_id: null })
                 // this.props.state.data.skill_name = ''
@@ -455,6 +458,8 @@ class Advert extends React.Component {
                                                         </div>
                                                 </div>
 
+                                                {console.log(this.props.state.data)}
+
                                                 {this.props.state.data.contacts.map((contact, i) => {
                                                         return (<div key={i}>
 
@@ -493,7 +498,7 @@ class Advert extends React.Component {
                                                         return (<div key={i}>
 
 
-                                                                <Skill disabled={this.props.state.disabled} i={i} state={this.state} skill={skill} updateData={this.props.updateData} getData={this.props.getData} />
+                                                                <Skill handleEssentialChange={this.handleEssentialChange} disabled={this.props.state.disabled} i={i} state={this.state} skill={skill} updateData={this.props.updateData} getData={this.props.getData} />
 
                                                         </div>)
                                                 })}
@@ -504,6 +509,7 @@ class Advert extends React.Component {
                                                         {skills}
                                                 </datalist>
 
+                                              
                                                 <button type="button" onClick={this.handleAddSkill}>Add Skill</button>
 
                                         </div>
